@@ -1,18 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:matir_bank/custom_ui/custom_button.dart';
 import 'package:matir_bank/custom_ui/custom_text_form_field.dart';
-import 'package:matir_bank/datatbase_helper/user_database.dart';
+import 'package:matir_bank/datatbase_helper/database_helper.dart';
 import 'package:matir_bank/model/app_user.dart';
 import 'package:matir_bank/utils/page_utils.dart';
 import 'package:matir_bank/utils/values/palette.dart';
 import 'package:matir_bank/view/log_in_page.dart';
 
 class RegistrationPage extends StatefulWidget {
-  final AppUser? appUser;
-
-  const RegistrationPage({Key? key, this.appUser}) : super(key: key);
+  const RegistrationPage({Key? key}) : super(key: key);
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
@@ -23,19 +22,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
   late double _pageHeight;
   late double _pageWidth;
   bool _autoValidate = false;
-
-  //late AppUser _appUser;
-  // var dbHelper;
-
-  late String userNameReg;
-  late String passwordReg;
-
+  late AppUser _appUser;
+  late String todayDate;
+  late String birthDate;
+  DateTime showingDate = DateTime.now();
+  var outputFormat = DateFormat('dd/MM/yyyy');
   @override
   void initState() {
     super.initState();
-    // dbHelper = UserDatabase();
-    userNameReg = widget.appUser?.userName ?? '';
-    passwordReg = widget.appUser?.password ?? '';
+    _appUser = AppUser();
+    birthDate = outputFormat.format(showingDate);
   }
 
   @override
@@ -75,27 +71,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         : AutovalidateMode.disabled,
                     child: Column(
                       children: [
-                        /*  SizedBox(
-                          height: 10.0,
-                        ),
                         CustomTextFormField(
-                          label: "User ID",
-                          hint: "Enter User ID",
-                          borderRadius: 5,
-                          prefixIcon: Icon(Icons.person),
-                          //validator: FormValidator.validateTextForm,
-                          inputType: TextInputType.name,
-                          isUnderLineBorder: false,
-                          isRoundBorder: true,
-                          onSaved: _onNewUserIDSaved,
-                          textInputAction: TextInputAction.next,
-                        ),*/
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        CustomTextFormField(
-                          label: "Name",
-                          hint: "Enter Name",
+                          label: "User Name",
+                          hint: "Enter User Name",
                           borderRadius: 5,
                           prefixIcon: Icon(Icons.person),
                           //validator: FormValidator.validateTextForm,
@@ -105,8 +83,52 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           onSaved: _onNewUserNameSaved,
                           textInputAction: TextInputAction.next,
                         ),
-
-                        /*SizedBox(
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        CustomTextFormField(
+                          label: "Full Name",
+                          hint: "Enter Full Name",
+                          borderRadius: 5,
+                          prefixIcon: Icon(Icons.person),
+                          //validator: FormValidator.validateTextForm,
+                          inputType: TextInputType.name,
+                          isUnderLineBorder: false,
+                          isRoundBorder: true,
+                          onSaved: _onFullNameSaved,
+                          textInputAction: TextInputAction.next,
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        CustomTextFormField(
+                          label: "Father's Name",
+                          hint: "Enter Father's Name",
+                          borderRadius: 5,
+                          prefixIcon: Icon(Icons.person),
+                          //validator: FormValidator.validateTextForm,
+                          inputType: TextInputType.name,
+                          isUnderLineBorder: false,
+                          isRoundBorder: true,
+                          onSaved: _onFatherNameSaved,
+                          textInputAction: TextInputAction.next,
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        CustomTextFormField(
+                          label: "Mother's Name",
+                          hint: "Enter Mother's Name",
+                          borderRadius: 5,
+                          prefixIcon: Icon(Icons.person),
+                          //validator: FormValidator.validateTextForm,
+                          inputType: TextInputType.name,
+                          isUnderLineBorder: false,
+                          isRoundBorder: true,
+                          onSaved: _onMotherNameSaved,
+                          textInputAction: TextInputAction.next,
+                        ),
+                        SizedBox(
                           height: 20.0,
                         ),
                         CustomTextFormField(
@@ -115,7 +137,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           borderRadius: 5,
                           prefixIcon: Icon(Icons.home),
                           //validator: FormValidator.validateTextForm,
-                          //onSaved: _onNameSaved,
+                          onSaved: _onAddressSaved,
                           inputType: TextInputType.name,
                           textInputAction: TextInputAction.next,
                         ),
@@ -128,10 +150,60 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           borderRadius: 5,
                           prefixIcon: Icon(Icons.phone),
                           //validator: FormValidator.validateTextForm,
-                          //onSaved: _onNameSaved,
+                          onSaved: _onPhoneNumberSaved,
                           inputType: TextInputType.name,
                           textInputAction: TextInputAction.next,
-                        ),*/
+                        ),
+                        SizedBox(
+                          height: _pageHeight * 0.02,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            _selectDate(context);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5)),
+                                border: Border.all(color: Colors.black54)),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: Icon(
+                                    Icons.calendar_today,
+                                    color: Palette.orangeShade.shade700,
+                                    //size: 20,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 6,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: Text(
+                                     birthDate,
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: _pageHeight * 0.02,
+                        ),
+                        CustomTextFormField(
+                          label: "Gender",
+                          hint: "Enter Gender",
+                          borderRadius: 5,
+                          prefixIcon: Icon(Icons.accessibility),
+                          //validator: FormValidator.validateTextForm,
+                          onSaved: _onGenderSaved,
+                          inputType: TextInputType.name,
+                          textInputAction: TextInputAction.next,
+                        ),
                         SizedBox(
                           height: 20.0,
                         ),
@@ -184,31 +256,59 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
-  _onNewUserNameSaved(newUserName) => userNameReg = newUserName;
+  _onNewUserNameSaved(newUserName) => _appUser.userName = newUserName;
 
-  _onNewPassSaved(newPassword) => passwordReg = newPassword;
+  _onFullNameSaved(fullName) => _appUser.fullName = fullName;
+
+  _onFatherNameSaved(fatherName) => _appUser.fatherName = fatherName;
+
+  _onMotherNameSaved(motherName) => _appUser.motherName = motherName;
+
+  _onAddressSaved(address) => _appUser.address = address;
+
+  _onPhoneNumberSaved(phoneNumber) => _appUser.phoneNumber = phoneNumber;
+
+  _onGenderSaved(gender) => _appUser.gender = gender;
+
+  _onNewPassSaved(newPassword) => _appUser.password = newPassword;
 
   signUp() async {
     if (_registrationFormKey.currentState!.validate()) {
       _registrationFormKey.currentState!.save();
-      final appUser = AppUser(userName: userNameReg, password: passwordReg);
-      await UserDatabase.instance.create(appUser);
-      print(appUser.userName);
-      print(appUser.password);
-      Fluttertoast.showToast(
-        msg: "Successfully Saved",
-        backgroundColor: Palette.orangeShade,
-      );
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => LogInPage()));
-    } else {
-      Fluttertoast.showToast(
-        msg: "Successfully Saved",
-        backgroundColor: Palette.orangeShade,
-      );
+      await DatabaseHelper.instance.register(_appUser).then((value) {
+        if (value) {
+          Fluttertoast.showToast(
+            msg: "Successfully Saved",
+            backgroundColor: Palette.orangeShade,
+          );
+        } else {
+          Fluttertoast.showToast(
+            msg: "Not Successful",
+            backgroundColor: Palette.orangeShade,
+          );
+        }
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => LogInPage()));
+      });
     }
     setState(() {
       _autoValidate = true;
     });
+  }
+
+  _selectDate(BuildContext context) async {
+    final DateTime picked = (await showDatePicker(
+      context: context,
+      initialDate: showingDate, // Refer step 1
+      firstDate: DateTime(2015),
+      lastDate: DateTime(5000),
+    ))!;
+
+    if (picked != null && picked != showingDate)
+      setState(() {
+        showingDate = picked;
+        birthDate = outputFormat.format(showingDate);
+        _appUser.birthDate= birthDate;
+      });
   }
 }

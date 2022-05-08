@@ -5,7 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:matir_bank/custom_ui/custom_button.dart';
 import 'package:matir_bank/custom_ui/custom_text_form_field.dart';
-import 'package:matir_bank/datatbase_helper/user_database.dart';
+import 'package:matir_bank/datatbase_helper/database_helper.dart';
 import 'package:matir_bank/model/app_user.dart';
 import 'package:matir_bank/utils/page_utils.dart';
 import 'package:matir_bank/utils/values/palette.dart';
@@ -14,10 +14,8 @@ import 'package:matir_bank/view/registration_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LogInPage extends StatefulWidget {
-  //final AppUser? appUser;
   const LogInPage({
     Key? key,
-    //this.appUser,
   }) : super(key: key);
 
   @override
@@ -39,8 +37,8 @@ class _LogInPageState extends State<LogInPage> {
   void initState() {
     super.initState();
     appUserList = [];
-    //userNameLog = widget.appUser?.userName ?? '';
-    //passwordLog = widget.appUser?.password ?? '';
+    userNameLog = '';
+    passwordLog = '';
   }
 
   @override
@@ -231,14 +229,18 @@ class _LogInPageState extends State<LogInPage> {
   logIn() async {
     if (_loginFormKey.currentState!.validate()) {
       _loginFormKey.currentState!.save();
-      await UserDatabase.instance
+      await DatabaseHelper.instance
           .getLoginUser(userNameLog, passwordLog)
           .then((userData) {
-        if (userData != null) {
+        if (userData.userName != null) {
           setSP(userData).whenComplete(() {
             Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (_) => DashboardPage()),
+                MaterialPageRoute(
+                  builder: (_) => DashboardPage(
+                    id: userData.id!,
+                  ),
+                ),
                 (Route<dynamic> route) => false);
           });
         } else {
@@ -262,11 +264,11 @@ class _LogInPageState extends State<LogInPage> {
 
   Future setSP(AppUser appUser) async {
     final SharedPreferences sp = await _pref;
-    sp.setString("userName", appUser.userName);
-    sp.setString("password", appUser.password);
+    sp.setString("userName", appUser.userName!);
+    sp.setString("password", appUser.password!);
   }
 
   void _queryAll() async {
-    appUserList = await UserDatabase.instance.showAllData();
+    appUserList = await DatabaseHelper.instance.showAllData();
   }
 }

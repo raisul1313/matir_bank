@@ -117,7 +117,6 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
               borderRadius:
                   BorderRadius.all(Radius.circular(widget.borderRadius!)),
               borderSide: BorderSide(width: 1, color: Colors.black)),*/
-
           enabledBorder: widget.isUnderLineBorder
               ? UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey.shade300),

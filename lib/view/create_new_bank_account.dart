@@ -57,32 +57,6 @@ class _CreateNewBankAccountState extends State<CreateNewBankAccount> {
                   height: _pageHeight * 0.02,
                 ),
                 CustomTextFormField(
-                  label: "Name",
-                  hint: "Enter Name",
-                  borderRadius: 5,
-                  prefixIcon: Icon(Icons.person),
-                  //validator: FormValidator.validateTextForm,
-                  //onSaved: _onNameSaved,
-                  inputType: TextInputType.name,
-                  textInputAction: TextInputAction.next,
-                ),
-                SizedBox(
-                  height: _pageHeight * 0.02,
-                ),
-                CustomTextFormField(
-                  label: "Address",
-                  hint: "Enter Address",
-                  borderRadius: 5,
-                  prefixIcon: Icon(Icons.home),
-                  //validator: FormValidator.validateTextForm,
-                  //onSaved: _onNameSaved,
-                  inputType: TextInputType.name,
-                  textInputAction: TextInputAction.next,
-                ),
-                SizedBox(
-                  height: _pageHeight * 0.02,
-                ),
-                CustomTextFormField(
                   label: "Branch Name",
                   hint: "Enter Branch Name",
                   borderRadius: 5,
@@ -96,10 +70,10 @@ class _CreateNewBankAccountState extends State<CreateNewBankAccount> {
                   height: _pageHeight * 0.02,
                 ),
                 CustomTextFormField(
-                  label: "Date of Birth",
-                  hint: "Enter Date of Birth",
+                  label: "Amount",
+                  hint: "Enter Initial Amount",
                   borderRadius: 5,
-                  prefixIcon: Icon(Icons.date_range),
+                  prefixIcon: Icon(Icons.apartment),
                   //validator: FormValidator.validateTextForm,
                   //onSaved: _onNameSaved,
                   inputType: TextInputType.name,
@@ -108,20 +82,7 @@ class _CreateNewBankAccountState extends State<CreateNewBankAccount> {
                 SizedBox(
                   height: _pageHeight * 0.02,
                 ),
-                CustomTextFormField(
-                  label: "Phone Number",
-                  hint: "Enter Phone Number",
-                  borderRadius: 5,
-                  prefixIcon: Icon(Icons.phone),
-                  //validator: FormValidator.validateTextForm,
-                  //onSaved: _onNameSaved,
-                  inputType: TextInputType.name,
-                  textInputAction: TextInputAction.next,
-                ),
-                SizedBox(
-                  height: _pageHeight * 0.02,
-                ),
-                CustomTextFormField(
+                /*CustomTextFormField(
                   label: "Pin",
                   hint: "Enter Pin",
                   borderRadius: 5,
@@ -148,7 +109,7 @@ class _CreateNewBankAccountState extends State<CreateNewBankAccount> {
                 ),
                 SizedBox(
                   height: _pageHeight * 0.02,
-                ),
+                ),*/
                 SizedBox(
                   width: 150,
                   child: CustomButton(

@@ -1,47 +1,52 @@
-final String tableUsers = 'users';
-
-class UserFields {
-  static final List<String> values = [
-    /// Add all fields
-    id, userName, password
-  ];
-
-  static final String id = '_id';
-  static final String userName = 'userName';
-  static final String password = 'password';
-}
-
 class AppUser {
-  final int? id;
-  final String userName;
-  final String password;
+  int? id;
+  String? userName;
+  String? fullName;
+  String? fatherName;
+  String? motherName;
+  String? address;
+  String? phoneNumber;
+  String? birthDate;
+  String? gender;
+  String? password;
 
-  const AppUser({
-    this.id,
-    required this.userName,
-    required this.password,
-  });
+  AppUser(
+      {this.id,
+        this.userName,
+        this.fullName,
+        this.fatherName,
+        this.motherName,
+        this.address,
+        this.phoneNumber,
+        this.birthDate,
+        this.gender,
+        this.password});
 
-  AppUser copy({
-    int? id,
-    String? userName,
-    String? password,
-  }) =>
-      AppUser(
-        id: id ?? this.id,
-        userName: userName ?? this.userName,
-        password: password ?? this.password,
-      );
+  AppUser.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    userName = json['user_name'];
+    fullName = json['full_name'];
+    fatherName = json['father_name'];
+    motherName = json['mother_name'];
+    address = json['address'];
+    phoneNumber = json['phone_number'];
+    birthDate = json['birth_date'];
+    gender = json['gender'];
+    password = json['password'];
+  }
 
-  static AppUser fromJson(Map<String, Object?> json) => AppUser(
-        id: json[UserFields.id] as int?,
-        userName: json[UserFields.userName] as String,
-        password: json[UserFields.password] as String,
-      );
-
-  Map<String, Object?> toJson() => {
-        UserFields.id: id,
-        UserFields.userName: userName,
-        UserFields.password: password,
-      };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['user_name'] = this.userName;
+    data['full_name'] = this.fullName;
+    data['father_name'] = this.fatherName;
+    data['mother_name'] = this.motherName;
+    data['address'] = this.address;
+    data['phone_number'] = this.phoneNumber;
+    data['birth_date'] = this.birthDate;
+    data['gender'] = this.gender;
+    data['password'] = this.password;
+    return data;
+  }
 }

@@ -85,16 +85,29 @@ import 'package:matir_bank/model/app_user.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-class UserDatabase {
-  static final UserDatabase instance = UserDatabase._init();
+class DatabaseHelper {
+  final String tableUsers = 'user_details';
+
+  static final String id = 'id';
+  static final String userName = 'user_name';
+  static final String fullName = 'full_name';
+  static final String fatherName = 'father_name';
+  static final String motherName = 'mother_name';
+  static final String address = 'address';
+  static final String phoneNumber = 'phone_number';
+  static final String birthDate = 'birth_date';
+  static final String gender = 'gender';
+  static final String password = 'password';
+
+  static final DatabaseHelper instance = DatabaseHelper._init();
   static Database? _database;
 
-  UserDatabase._init();
+  DatabaseHelper._init();
 
   Future<Database> get database async {
     if (_database != null) return _database!;
 
-    _database = await _initDB('notes.db');
+    _database = await _initDB('users.db');
     return _database!;
   }
 
@@ -108,50 +121,50 @@ class UserDatabase {
   Future _createDB(Database db, int version) async {
     final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     final textType = 'TEXT NOT NULL';
-    final boolType = 'BOOLEAN NOT NULL';
-    final integerType = 'INTEGER NOT NULL';
-
     await db.execute('''
 CREATE TABLE $tableUsers ( 
-  ${UserFields.id} $idType, 
-  ${UserFields.userName} $textType,
-  ${UserFields.password} $textType
+  $id $idType, 
+  $userName $textType,
+  $fullName $textType,
+  $fatherName $textType,
+  $motherName $textType,
+  $address $textType,
+  $phoneNumber $textType,
+  $birthDate $textType,
+  $gender $textType,
+  $password $textType
   )
 ''');
   }
 
-  Future<AppUser> create(AppUser appUser) async {
+  Future<bool> register(AppUser appUser) async {
     final db = await instance.database;
     final id = await db.insert(tableUsers, appUser.toJson());
-    return appUser.copy(id: id);
-  }
-
-  Future<AppUser> readNote(int id) async {
-    final db = await instance.database;
-    final maps = await db.query(
-      tableUsers,
-      columns: UserFields.values,
-      where: '${UserFields.id}  = ?',
-      whereArgs: [id],
-    );
-
-    if (maps.isNotEmpty) {
-      return AppUser.fromJson(maps.first);
-    } else {
-      throw Exception('ID $id not found');
-    }
+    return id != null ? true : false;
   }
 
   Future<AppUser> getLoginUser(String userNameDB, String passwordDB) async {
     final db = await instance.database;
     var res = await db.rawQuery("SELECT * FROM $tableUsers WHERE "
-        "${UserFields.userName} = '$userNameDB' AND "
-        "${UserFields.password} = '$passwordDB'");
+        "$userName = '$userNameDB' AND "
+        "$password = '$passwordDB'");
 
     if (res.isNotEmpty) {
       return AppUser.fromJson(res.first);
     } else {
       throw Exception('Name: $userNameDB or Pass: $passwordDB was not found');
+    }
+  }
+
+  Future<AppUser> getUserData(int userID) async {
+    final db = await instance.database;
+    var res = await db.rawQuery("SELECT * FROM $tableUsers WHERE "
+        "$id = '$userID'");
+
+    if (res.isNotEmpty) {
+      return AppUser.fromJson(res.first);
+    } else {
+      throw Exception('ID: $userID was not found');
     }
   }
 
@@ -166,7 +179,7 @@ CREATE TABLE $tableUsers (
     return db.update(
       tableUsers,
       appUser.toJson(),
-      where: '${UserFields.id} = ?',
+      where: '$id = ?',
       whereArgs: [appUser.id],
     );
   }
@@ -175,14 +188,13 @@ CREATE TABLE $tableUsers (
     final db = await instance.database;
     return await db.delete(
       tableUsers,
-      where: '${UserFields.id} = ?',
+      where: '$id = ?',
       whereArgs: [id],
     );
   }
 
   Future close() async {
     final db = await instance.database;
-
     db.close();
   }
 }
