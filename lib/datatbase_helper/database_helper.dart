@@ -81,6 +81,8 @@ class UserDatabase {
   }
 }*/
 
+import 'dart:ffi';
+
 import 'package:matir_bank/model/app_user.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -99,6 +101,11 @@ class DatabaseHelper {
   static final String gender = 'gender';
   static final String password = 'password';
 
+  static final String accountNumber = 'account_number';
+  static final String branch = 'branch';
+  static final String amount = 'amount';
+  static final String type = 'type';
+
   static final DatabaseHelper instance = DatabaseHelper._init();
   static Database? _database;
 
@@ -114,27 +121,43 @@ class DatabaseHelper {
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
-
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    return await openDatabase(path, version: 1, onCreate: createTable);
   }
 
-  Future _createDB(Database db, int version) async {
+  Future<void> createTable(Database db, int version) async {
+    _createUserTable;
+    _createBankAccountTable;
+  }
+
+  Future _createUserTable(Database db, int version) async {
     final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     final textType = 'TEXT NOT NULL';
-    await db.execute('''
-CREATE TABLE $tableUsers ( 
-  $id $idType, 
-  $userName $textType,
-  $fullName $textType,
-  $fatherName $textType,
-  $motherName $textType,
-  $address $textType,
-  $phoneNumber $textType,
-  $birthDate $textType,
-  $gender $textType,
-  $password $textType
-  )
-''');
+    await db.execute('''CREATE TABLE $tableUsers ( 
+    $id $idType, 
+    $userName $textType,
+    $fullName $textType,
+    $fatherName $textType,
+    $motherName $textType,
+    $address $textType,
+    $phoneNumber $textType,
+    $birthDate $textType,
+    $gender $textType,
+    $password $textType
+    )''');
+  }
+
+  Future _createBankAccountTable(Database db, int version) async {
+    final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+    final textType = 'TEXT NOT NULL';
+    final intType = 'INT NOT NULL';
+    await db.execute('''CREATE TABLE $tableUsers ( 
+    $id $idType, 
+    $accountNumber $textType,
+    $branch $textType,
+    $amount $textType,
+    $type $textType,
+    PRIMARY KEY ($id),
+    )''');
   }
 
   Future<bool> register(AppUser appUser) async {
