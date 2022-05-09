@@ -1,5 +1,5 @@
 class AppUser {
-  int? id;
+  int? userID;
   String? userName;
   String? fullName;
   String? fatherName;
@@ -11,19 +11,19 @@ class AppUser {
   String? password;
 
   AppUser(
-      {this.id,
-        this.userName,
-        this.fullName,
-        this.fatherName,
-        this.motherName,
-        this.address,
-        this.phoneNumber,
-        this.birthDate,
-        this.gender,
-        this.password});
+      {this.userID,
+      this.userName,
+      this.fullName,
+      this.fatherName,
+      this.motherName,
+      this.address,
+      this.phoneNumber,
+      this.birthDate,
+      this.gender,
+      this.password});
 
   AppUser.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    userID = json['user_id'];
     userName = json['user_name'];
     fullName = json['full_name'];
     fatherName = json['father_name'];
@@ -37,7 +37,7 @@ class AppUser {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
+    data['user_id'] = this.userID;
     data['user_name'] = this.userName;
     data['full_name'] = this.fullName;
     data['father_name'] = this.fatherName;

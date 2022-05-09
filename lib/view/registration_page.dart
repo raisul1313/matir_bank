@@ -19,14 +19,15 @@ class RegistrationPage extends StatefulWidget {
 
 class _RegistrationPageState extends State<RegistrationPage> {
   final _registrationFormKey = GlobalKey<FormState>();
+  bool _autoValidate = false;
   late double _pageHeight;
   late double _pageWidth;
-  bool _autoValidate = false;
   late AppUser _appUser;
   late String todayDate;
   late String birthDate;
   DateTime showingDate = DateTime.now();
   var outputFormat = DateFormat('dd/MM/yyyy');
+
   @override
   void initState() {
     super.initState();
@@ -181,7 +182,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(15.0),
                                     child: Text(
-                                     birthDate,
+                                      birthDate,
                                       textAlign: TextAlign.left,
                                       style: TextStyle(color: Colors.grey),
                                     ),
@@ -283,7 +284,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           );
         } else {
           Fluttertoast.showToast(
-            msg: "Not Successful",
+            msg: "Not Successful !!!",
             backgroundColor: Palette.orangeShade,
           );
         }
@@ -300,7 +301,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     final DateTime picked = (await showDatePicker(
       context: context,
       initialDate: showingDate, // Refer step 1
-      firstDate: DateTime(2015),
+      firstDate: DateTime(1000),
       lastDate: DateTime(5000),
     ))!;
 
@@ -308,7 +309,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       setState(() {
         showingDate = picked;
         birthDate = outputFormat.format(showingDate);
-        _appUser.birthDate= birthDate;
+        _appUser.birthDate = birthDate;
       });
   }
 }

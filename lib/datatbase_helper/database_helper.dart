@@ -1,96 +1,13 @@
-/*import 'package:flutter/foundation.dart';
 import 'package:matir_bank/model/app_user.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
-import 'dart:io' as io;
-
-class UserDatabase {
-  static Database? _db;
-
-  static const String dbName = 'test.db';
-  static const String tableUser = 'user';
-  static const int version = 1;
-
-  static const String columnUserID = 'user_id';
-  static const String columnUserName = 'user_name';
-  static const String columnPassword = 'password';
-
-  Future<Database?> get db async {
-    if (_db != null) {
-      return _db;
-    } else {
-      _db = await initDb();
-    }
-    return _db;
-  }
-
-  // crete DB on local
-  initDb() async {
-    io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    if (kDebugMode) {
-      print("DATABASE LOCATION: " + documentsDirectory.path);
-    }
-    String path = join(documentsDirectory.path, dbName);
-    var db = await openDatabase(path, version: version, onCreate: _onCreate);
-    return db;
-  }
-
-  //table create to DB
-  _onCreate(Database db, int intVersion) async {
-    await db.execute("CREATE TABLE $tableUser ("
-        " $columnUserID TEXT, "
-        " $columnUserName TEXT, "
-        " $columnPassword TEXT, "
-        " PRIMARY KEY ($columnUserID)"
-        ")");
-  }
-
-  //to save data from object model class
-  Future<int> saveData(AppUser user) async {
-    var dbClient = await db;
-    var response = await dbClient!.insert(tableUser, user.toMap());
-    return response;
-  }
-
-  Future<AppUser?> getLoginUser(String userId, String password) async {
-    var dbClient = await db;
-    var res = await dbClient!.rawQuery("SELECT * FROM $tableUser WHERE "
-        "$columnUserID = '$userId' AND "
-        "$columnPassword = '$password'");
-
-    if (res.isNotEmpty) {
-      return AppUser.fromMap(res.first);
-    }
-    return null;
-  }
-
-  Future<List<Map<String, dynamic>>> queryAllRows() async {
-    var dbClient = await db;
-    var res = await dbClient!.query(tableUser);
-    return res;
-  }
-
-  Future getUserData() async {
-    var dbClient = await db;
-    var res = await dbClient!.rawQuery("SELECT * FROM $tableUser");
-    print("result user data $res");
-    print("result user data " + res.toString());
-    List list = res.toList().map((c) => AppUser.fromMap(c)).toList();
-    return list[0];
-  }
-}*/
-
-import 'dart:ffi';
-
-import 'package:matir_bank/model/app_user.dart';
+import 'package:matir_bank/model/bank_account.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
-  final String tableUsers = 'user_details';
+  final String tableUsers = 'user_table';
+  final String tableAccounts = 'account_table';
 
-  static final String id = 'id';
+  static final String userID = 'user_id';
   static final String userName = 'user_name';
   static final String fullName = 'full_name';
   static final String fatherName = 'father_name';
@@ -101,6 +18,8 @@ class DatabaseHelper {
   static final String gender = 'gender';
   static final String password = 'password';
 
+  static final String accountID = 'account_id';
+  static final String fkUserID = 'fk_user_id';
   static final String accountNumber = 'account_number';
   static final String branch = 'branch';
   static final String amount = 'amount';
@@ -113,27 +32,23 @@ class DatabaseHelper {
 
   Future<Database> get database async {
     if (_database != null) return _database!;
-
-    _database = await _initDB('users.db');
+    _database = await _initDB('matirBank.db');
     return _database!;
   }
 
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
-    return await openDatabase(path, version: 1, onCreate: createTable);
+    return await openDatabase(path, version: 1, onCreate: _onCreate);
   }
 
-  Future<void> createTable(Database db, int version) async {
-    _createUserTable;
-    _createBankAccountTable;
-  }
-
-  Future _createUserTable(Database db, int version) async {
+  Future _onCreate(Database db, int version) async {
     final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+    final fkidType = 'INTEGER';
     final textType = 'TEXT NOT NULL';
+    final realType = 'REAL NOT NULL';
     await db.execute('''CREATE TABLE $tableUsers ( 
-    $id $idType, 
+    $userID $idType, 
     $userName $textType,
     $fullName $textType,
     $fatherName $textType,
@@ -144,26 +59,28 @@ class DatabaseHelper {
     $gender $textType,
     $password $textType
     )''');
-  }
 
-  Future _createBankAccountTable(Database db, int version) async {
-    final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
-    final textType = 'TEXT NOT NULL';
-    final intType = 'INT NOT NULL';
-    await db.execute('''CREATE TABLE $tableUsers ( 
-    $id $idType, 
+    await db.execute('''CREATE TABLE $tableAccounts ( 
+    $accountID $idType,
+    $fkUserID $fkidType,
     $accountNumber $textType,
     $branch $textType,
     $amount $textType,
     $type $textType,
-    PRIMARY KEY ($id),
+    FOREIGN KEY ($fkUserID) REFERENCES $tableUsers($userID)
     )''');
   }
 
   Future<bool> register(AppUser appUser) async {
     final db = await instance.database;
-    final id = await db.insert(tableUsers, appUser.toJson());
-    return id != null ? true : false;
+    final userID = await db.insert(tableUsers, appUser.toJson());
+    return userID != null ? true : false;
+  }
+
+  Future<bool> createNewBankAccount(BankAccount bankAccount) async {
+    final db = await instance.database;
+    final accountID = await db.insert(tableAccounts, bankAccount.toJson());
+    return accountID != null ? true : false;
   }
 
   Future<AppUser> getLoginUser(String userNameDB, String passwordDB) async {
@@ -179,15 +96,15 @@ class DatabaseHelper {
     }
   }
 
-  Future<AppUser> getUserData(int userID) async {
+  Future<AppUser> getUserData(int id) async {
     final db = await instance.database;
     var res = await db.rawQuery("SELECT * FROM $tableUsers WHERE "
-        "$id = '$userID'");
+        "$userID = '$id'");
 
     if (res.isNotEmpty) {
       return AppUser.fromJson(res.first);
     } else {
-      throw Exception('ID: $userID was not found');
+      throw Exception('ID: $id was not found');
     }
   }
 
@@ -202,8 +119,8 @@ class DatabaseHelper {
     return db.update(
       tableUsers,
       appUser.toJson(),
-      where: '$id = ?',
-      whereArgs: [appUser.id],
+      where: '$userID = ?',
+      whereArgs: [appUser.userID],
     );
   }
 
@@ -211,7 +128,7 @@ class DatabaseHelper {
     final db = await instance.database;
     return await db.delete(
       tableUsers,
-      where: '$id = ?',
+      where: '$userID = ?',
       whereArgs: [id],
     );
   }

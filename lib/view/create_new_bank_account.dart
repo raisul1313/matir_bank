@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:matir_bank/custom_ui/custom_button.dart';
 import 'package:matir_bank/custom_ui/custom_text_form_field.dart';
+import 'package:matir_bank/datatbase_helper/database_helper.dart';
+import 'package:matir_bank/model/bank_account.dart';
 import 'package:matir_bank/utils/page_utils.dart';
 import 'package:matir_bank/utils/values/palette.dart';
 
@@ -13,10 +15,17 @@ class CreateNewBankAccount extends StatefulWidget {
 }
 
 class _CreateNewBankAccountState extends State<CreateNewBankAccount> {
+  final _createBankAccountFormKey = GlobalKey<FormState>();
+  bool _autoValidate = false;
   late double _pageHeight;
   late double _pageWidth;
-  final _createBankAccountFormKey = GlobalKey<FormState>();
-  final bool _autoValidate = false;
+  late BankAccount _bankAccount;
+
+  @override
+  void initState() {
+    super.initState();
+    _bankAccount = BankAccount();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,33 +65,63 @@ class _CreateNewBankAccountState extends State<CreateNewBankAccount> {
                 SizedBox(
                   height: _pageHeight * 0.02,
                 ),
-                CustomTextFormField(
-                  label: "Branch Name",
-                  hint: "Enter Branch Name",
-                  borderRadius: 5,
-                  prefixIcon: Icon(Icons.apartment),
-                  //validator: FormValidator.validateTextForm,
-                  //onSaved: _onNameSaved,
-                  inputType: TextInputType.name,
-                  textInputAction: TextInputAction.next,
-                ),
-                SizedBox(
-                  height: _pageHeight * 0.02,
-                ),
-                CustomTextFormField(
-                  label: "Amount",
-                  hint: "Enter Initial Amount",
-                  borderRadius: 5,
-                  prefixIcon: Icon(Icons.apartment),
-                  //validator: FormValidator.validateTextForm,
-                  //onSaved: _onNameSaved,
-                  inputType: TextInputType.name,
-                  textInputAction: TextInputAction.next,
-                ),
-                SizedBox(
-                  height: _pageHeight * 0.02,
-                ),
-                /*CustomTextFormField(
+                Form(
+                  key: _createBankAccountFormKey,
+                  autovalidateMode: _autoValidate
+                      ? AutovalidateMode.always
+                      : AutovalidateMode.disabled,
+                  child: Column(
+                    children: [
+                      CustomTextFormField(
+                        label: "Account No.",
+                        hint: "Enter Account No.",
+                        borderRadius: 5,
+                        prefixIcon: Icon(Icons.apartment),
+                        //validator: FormValidator.validateTextForm,
+                        onSaved: _onAccountNoSaved,
+                        inputType: TextInputType.name,
+                        textInputAction: TextInputAction.next,
+                      ),
+                      SizedBox(
+                        height: _pageHeight * 0.02,
+                      ),
+                      CustomTextFormField(
+                        label: "Branch Name",
+                        hint: "Enter Branch Name",
+                        borderRadius: 5,
+                        prefixIcon: Icon(Icons.apartment),
+                        //validator: FormValidator.validateTextForm,
+                        onSaved: _onBranchNameSaved,
+                        inputType: TextInputType.name,
+                        textInputAction: TextInputAction.next,
+                      ),
+                      SizedBox(
+                        height: _pageHeight * 0.02,
+                      ),
+                      CustomTextFormField(
+                        label: "Amount",
+                        hint: "Enter Initial Amount",
+                        borderRadius: 5,
+                        prefixIcon: Icon(Icons.apartment),
+                        //validator: FormValidator.validateTextForm,
+                        onSaved: _onInitialAmountSaved,
+                        inputType: TextInputType.name,
+                        textInputAction: TextInputAction.next,
+                      ),
+                      SizedBox(
+                        height: _pageHeight * 0.02,
+                      ),
+                      CustomTextFormField(
+                        label: "Account Type",
+                        hint: "Enter Account Type",
+                        borderRadius: 5,
+                        prefixIcon: Icon(Icons.apartment),
+                        //validator: FormValidator.validateTextForm,
+                        onSaved: _onAccountTypeSaved,
+                        inputType: TextInputType.name,
+                        textInputAction: TextInputAction.next,
+                      ),
+                      /*CustomTextFormField(
                   label: "Pin",
                   hint: "Enter Pin",
                   borderRadius: 5,
@@ -110,19 +149,16 @@ class _CreateNewBankAccountState extends State<CreateNewBankAccount> {
                 SizedBox(
                   height: _pageHeight * 0.02,
                 ),*/
-                SizedBox(
-                  width: 150,
-                  child: CustomButton(
-                    buttonHeight: 50,
-                    buttonName: 'Submit',
-                    backgroundColor: Palette.orangeShade.shade700,
-                    onButtonPressed: () {
-                      Navigator.pop(context);
-                      Fluttertoast.showToast(
-                        msg: "New bank account successfully created",
-                        backgroundColor: Palette.orangeShade,
-                      );
-                    },
+                      SizedBox(
+                        width: 150,
+                        child: CustomButton(
+                          buttonHeight: 50,
+                          buttonName: 'Submit',
+                          backgroundColor: Palette.orangeShade.shade700,
+                          onButtonPressed: createAccount,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -131,5 +167,38 @@ class _CreateNewBankAccountState extends State<CreateNewBankAccount> {
         ),
       ),
     );
+  }
+
+  _onAccountNoSaved(accountNo) => _bankAccount.accountNumber = accountNo;
+
+  _onBranchNameSaved(branchName) => _bankAccount.branch = branchName;
+
+  _onInitialAmountSaved(initialAmount) => _bankAccount.amount = initialAmount;
+
+  _onAccountTypeSaved(accountType) => _bankAccount.type = accountType;
+
+  createAccount() async {
+    if (_createBankAccountFormKey.currentState!.validate()) {
+      _createBankAccountFormKey.currentState!.save();
+      await DatabaseHelper.instance
+          .createNewBankAccount(_bankAccount)
+          .then((value) {
+        if (value) {
+          Fluttertoast.showToast(
+            msg: "New Account Saved",
+            backgroundColor: Palette.orangeShade,
+          );
+        } else {
+          Fluttertoast.showToast(
+            msg: "Not Successful !!!",
+            backgroundColor: Palette.orangeShade,
+          );
+        }
+        Navigator.pop(context);
+      });
+    }
+    setState(() {
+      _autoValidate = true;
+    });
   }
 }

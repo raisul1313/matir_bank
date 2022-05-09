@@ -205,7 +205,7 @@ class _LogInPageState extends State<LogInPage> {
                           height: 40,
                           child: Center(
                             child: Text(
-                              'ID: ${appUserList[index].id} Name: ${appUserList[index].userName} Pass: ${appUserList[index].password}',
+                              'ID: ${appUserList[index].userID} Name: ${appUserList[index].userName} Pass: ${appUserList[index].password}',
                               style: TextStyle(fontSize: 18),
                             ),
                           ),
@@ -238,7 +238,7 @@ class _LogInPageState extends State<LogInPage> {
                 context,
                 MaterialPageRoute(
                   builder: (_) => DashboardPage(
-                    id: userData.id!,
+                    id: userData.userID!,
                   ),
                 ),
                 (Route<dynamic> route) => false);
