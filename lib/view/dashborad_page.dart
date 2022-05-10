@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:matir_bank/custom_ui/custom_button.dart';
+import 'package:matir_bank/custom_ui/custom_account_item.dart';
 import 'package:matir_bank/datatbase_helper/database_helper.dart';
 import 'package:matir_bank/model/app_user.dart';
 import 'package:matir_bank/utils/page_utils.dart';
 import 'package:matir_bank/utils/values/palette.dart';
 import 'package:matir_bank/view/create_new_bank_account.dart';
-import 'package:matir_bank/view/log_in_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -72,6 +71,7 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
             ),
           ),
+          AccountItem(),
         ],
       ),
     );
