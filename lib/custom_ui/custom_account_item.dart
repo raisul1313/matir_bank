@@ -43,14 +43,14 @@ class AccountItem extends StatelessWidget {
                       },
                     ),*/
                   )),
-              Expanded(
+              /*Expanded(
                 flex: 3,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 5.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      /*Text(
+                      *//*Text(
                         movie.movieName!,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -58,14 +58,14 @@ class AccountItem extends StatelessWidget {
                           fontSize: 20.0,
                           fontWeight: FontWeight.bold,
                         ),
-                      ),*/
+                      ),*//*
                       SizedBox(
                         height: 2,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          /*Expanded(
+                          *//*Expanded(
                               flex: 0,
                               child: Text(movie.movieYear!.toString() + ",")),
                           Expanded(
@@ -75,22 +75,22 @@ class AccountItem extends StatelessWidget {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                          )*/
+                          )*//*
                         ],
                       ),
                       SizedBox(
                         height: 4,
                       ),
-                      /*Text(
+                      *//*Text(
                         movie.movieDescription!,
                         maxLines: 5,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.justify,
-                      ),*/
+                      ),*//*
                     ],
                   ),
                 ),
-              )
+              )*/
             ],
           ),
         ),
