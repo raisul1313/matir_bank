@@ -22,13 +22,13 @@ class AccountItem extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
+              /*Expanded(
                   flex: 1,
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(),
                     ),
-                    /*child: CachedNetworkImage(
+                    *//*child: CachedNetworkImage(
                       fit: BoxFit.cover,
                       placeholder: (context, url) => SizedBox(
                         child: Image.asset("assets/images/load.png"),
@@ -41,7 +41,7 @@ class AccountItem extends StatelessWidget {
                           color: Colors.red,
                         );
                       },
-                    ),*/
+                    ),*//*
                   )),
               Expanded(
                 flex: 3,
@@ -50,7 +50,7 @@ class AccountItem extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      /*Text(
+                      *//*Text(
                         movie.movieName!,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -58,14 +58,14 @@ class AccountItem extends StatelessWidget {
                           fontSize: 20.0,
                           fontWeight: FontWeight.bold,
                         ),
-                      ),*/
+                      ),*//*
                       SizedBox(
                         height: 2,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          /*Expanded(
+                          *//*Expanded(
                               flex: 0,
                               child: Text(movie.movieYear!.toString() + ",")),
                           Expanded(
@@ -75,22 +75,22 @@ class AccountItem extends StatelessWidget {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                          )*/
+                          )*//*
                         ],
                       ),
                       SizedBox(
                         height: 4,
                       ),
-                      /*Text(
+                      *//*Text(
                         movie.movieDescription!,
                         maxLines: 5,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.justify,
-                      ),*/
+                      ),*//*
                     ],
                   ),
                 ),
-              )
+              )*/
             ],
           ),
         ),
