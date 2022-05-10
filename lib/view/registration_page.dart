@@ -27,12 +27,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
   late String birthDate;
   DateTime showingDate = DateTime.now();
   var outputFormat = DateFormat('dd/MM/yyyy');
+  int _radioGroupValue = 1;
+  String _selectedGender = "";
 
   @override
   void initState() {
     super.initState();
     _appUser = AppUser();
     birthDate = outputFormat.format(showingDate);
+    _appUser.birthDate = birthDate;
+    _selectedGender = "Male";
   }
 
   @override
@@ -195,15 +199,44 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         SizedBox(
                           height: _pageHeight * 0.02,
                         ),
-                        CustomTextFormField(
-                          label: "Gender",
-                          hint: "Enter Gender",
-                          borderRadius: 5,
-                          prefixIcon: Icon(Icons.accessibility),
-                          //validator: FormValidator.validateTextForm,
-                          onSaved: _onGenderSaved,
-                          inputType: TextInputType.name,
-                          textInputAction: TextInputAction.next,
+
+                        Row(
+                          children: [
+                            Text(
+                              "Gender: ",
+                              style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Radio(
+                                    value: 1,
+                                    groupValue: _radioGroupValue,
+                                    onChanged: _handleRadioValue),
+                                Text("Male"),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Radio(
+                                    value: 2,
+                                    groupValue: _radioGroupValue,
+                                    onChanged: _handleRadioValue),
+                                Text("Female"),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Radio(
+                                    value: 3,
+                                    groupValue: _radioGroupValue,
+                                    onChanged: _handleRadioValue),
+                                Text("Other"),
+                              ],
+                            ),
+                          ],
                         ),
                         SizedBox(
                           height: 20.0,
@@ -269,13 +302,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   _onPhoneNumberSaved(phoneNumber) => _appUser.phoneNumber = phoneNumber;
 
-  _onGenderSaved(gender) => _appUser.gender = gender;
+  //_onGenderSaved(gender) => _appUser.gender = gender;
 
   _onNewPassSaved(newPassword) => _appUser.password = newPassword;
 
   signUp() async {
     if (_registrationFormKey.currentState!.validate()) {
       _registrationFormKey.currentState!.save();
+      _appUser.gender = _selectedGender;
       await DatabaseHelper.instance.register(_appUser).then((value) {
         if (value) {
           Fluttertoast.showToast(
@@ -311,5 +345,32 @@ class _RegistrationPageState extends State<RegistrationPage> {
         birthDate = outputFormat.format(showingDate);
         _appUser.birthDate = birthDate;
       });
+  }
+
+  _handleRadioValue(value) {
+    switch (value) {
+      case 1:
+        setState(() {
+          _radioGroupValue = value;
+          _selectedGender = "Male";
+        });
+
+        break;
+      case 2:
+        setState(() {
+          _radioGroupValue = value;
+          _selectedGender = "Female";
+        });
+        break;
+      case 3:
+        setState(() {
+          _radioGroupValue = value;
+          _selectedGender = "Other";
+        });
+        break;
+      default:
+        _selectedGender = "Male";
+        break;
+    }
   }
 }

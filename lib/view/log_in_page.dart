@@ -9,7 +9,7 @@ import 'package:matir_bank/datatbase_helper/database_helper.dart';
 import 'package:matir_bank/model/app_user.dart';
 import 'package:matir_bank/utils/page_utils.dart';
 import 'package:matir_bank/utils/values/palette.dart';
-import 'package:matir_bank/view/dashboard_page.dart';
+import 'package:matir_bank/view/landing_page.dart';
 import 'package:matir_bank/view/registration_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,7 +23,6 @@ class LogInPage extends StatefulWidget {
 }
 
 class _LogInPageState extends State<LogInPage> {
-  Future<SharedPreferences> _pref = SharedPreferences.getInstance();
   late List<AppUser> appUserList;
   late String userNameLog;
   late String passwordLog;
@@ -237,9 +236,7 @@ class _LogInPageState extends State<LogInPage> {
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => DashboardPage(
-                    id: userData.userID!,
-                  ),
+                  builder: (_) => LandingPage(),
                 ),
                 (Route<dynamic> route) => false);
           });
@@ -263,9 +260,8 @@ class _LogInPageState extends State<LogInPage> {
   }
 
   Future setSP(AppUser appUser) async {
-    final SharedPreferences sp = await _pref;
-    sp.setString("userName", appUser.userName!);
-    sp.setString("password", appUser.password!);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt("id", appUser.userID!);
   }
 
   void _queryAll() async {

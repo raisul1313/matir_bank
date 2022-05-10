@@ -19,7 +19,6 @@ class DatabaseHelper {
   static final String password = 'password';
 
   static final String accountID = 'account_id';
-  static final String fkUserID = 'fk_user_id';
   static final String accountNumber = 'account_number';
   static final String branch = 'branch';
   static final String amount = 'amount';
@@ -44,7 +43,7 @@ class DatabaseHelper {
 
   Future _onCreate(Database db, int version) async {
     final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
-    final fkidType = 'INTEGER';
+    final intType = 'INTEGER NOT NULL';
     final textType = 'TEXT NOT NULL';
     final realType = 'REAL NOT NULL';
     await db.execute('''CREATE TABLE $tableUsers ( 
@@ -62,12 +61,12 @@ class DatabaseHelper {
 
     await db.execute('''CREATE TABLE $tableAccounts ( 
     $accountID $idType,
-    $fkUserID $fkidType,
+    $userID $intType,
     $accountNumber $textType,
     $branch $textType,
     $amount $textType,
     $type $textType,
-    FOREIGN KEY ($fkUserID) REFERENCES $tableUsers($userID)
+    FOREIGN KEY ($userID) REFERENCES $tableUsers($userID)
     )''');
   }
 

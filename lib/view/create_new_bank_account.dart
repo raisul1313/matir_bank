@@ -6,6 +6,7 @@ import 'package:matir_bank/datatbase_helper/database_helper.dart';
 import 'package:matir_bank/model/bank_account.dart';
 import 'package:matir_bank/utils/page_utils.dart';
 import 'package:matir_bank/utils/values/palette.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateNewBankAccount extends StatefulWidget {
   const CreateNewBankAccount({Key? key}) : super(key: key);
@@ -20,11 +21,22 @@ class _CreateNewBankAccountState extends State<CreateNewBankAccount> {
   late double _pageHeight;
   late double _pageWidth;
   late BankAccount _bankAccount;
+  late int id;
+  late String _selectAccountType;
+  int _radioGroupValue = 1;
 
   @override
   void initState() {
-    super.initState();
     _bankAccount = BankAccount();
+    _getUserID();
+    _selectAccountType = "Current Account";
+    super.initState();
+  }
+
+  void _getUserID() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    id = prefs.getInt("id")!;
+    _bankAccount.userID = id;
   }
 
   @override
@@ -76,7 +88,7 @@ class _CreateNewBankAccountState extends State<CreateNewBankAccount> {
                         label: "Account No.",
                         hint: "Enter Account No.",
                         borderRadius: 5,
-                        prefixIcon: Icon(Icons.apartment),
+                        prefixIcon: Icon(Icons.account_circle),
                         //validator: FormValidator.validateTextForm,
                         onSaved: _onAccountNoSaved,
                         inputType: TextInputType.name,
@@ -89,7 +101,7 @@ class _CreateNewBankAccountState extends State<CreateNewBankAccount> {
                         label: "Branch Name",
                         hint: "Enter Branch Name",
                         borderRadius: 5,
-                        prefixIcon: Icon(Icons.apartment),
+                        prefixIcon: Icon(Icons.account_balance_sharp),
                         //validator: FormValidator.validateTextForm,
                         onSaved: _onBranchNameSaved,
                         inputType: TextInputType.name,
@@ -102,7 +114,7 @@ class _CreateNewBankAccountState extends State<CreateNewBankAccount> {
                         label: "Amount",
                         hint: "Enter Initial Amount",
                         borderRadius: 5,
-                        prefixIcon: Icon(Icons.apartment),
+                        prefixIcon: Icon(Icons.add),
                         //validator: FormValidator.validateTextForm,
                         onSaved: _onInitialAmountSaved,
                         inputType: TextInputType.name,
@@ -111,44 +123,49 @@ class _CreateNewBankAccountState extends State<CreateNewBankAccount> {
                       SizedBox(
                         height: _pageHeight * 0.02,
                       ),
-                      CustomTextFormField(
-                        label: "Account Type",
-                        hint: "Enter Account Type",
-                        borderRadius: 5,
-                        prefixIcon: Icon(Icons.apartment),
-                        //validator: FormValidator.validateTextForm,
-                        onSaved: _onAccountTypeSaved,
-                        inputType: TextInputType.name,
-                        textInputAction: TextInputAction.next,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Select Bank Account: ",
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Radio(
+                                      value: 1,
+                                      groupValue: _radioGroupValue,
+                                      onChanged: _handleRadioValue),
+                                  Text("Current Account"),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Radio(
+                                      value: 2,
+                                      groupValue: _radioGroupValue,
+                                      onChanged: _handleRadioValue),
+                                  Text("Saving Account"),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Radio(
+                                      value: 3,
+                                      groupValue: _radioGroupValue,
+                                      onChanged: _handleRadioValue),
+                                  Text("Fixed Deposit Account"),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                      /*CustomTextFormField(
-                  label: "Pin",
-                  hint: "Enter Pin",
-                  borderRadius: 5,
-                  prefixIcon: Icon(Icons.apps),
-                  //validator: FormValidator.validateTextForm,
-                  //onSaved: _onPassSaved,
-                  inputType: TextInputType.number,
-                  isPasswordField: true,
-                  textInputAction: TextInputAction.next,
-                ),
-                SizedBox(
-                  height: _pageHeight * 0.02,
-                ),
-                CustomTextFormField(
-                  label: "Confirm Pin",
-                  hint: "Re-type Pin",
-                  borderRadius: 5,
-                  prefixIcon: Icon(Icons.apps),
-                  //validator: FormValidator.validateTextForm,
-                  //onSaved: _onPassSaved,
-                  inputType: TextInputType.number,
-                  isPasswordField: true,
-                  textInputAction: TextInputAction.done,
-                ),
-                SizedBox(
-                  height: _pageHeight * 0.02,
-                ),*/
                       SizedBox(
                         width: 150,
                         child: CustomButton(
@@ -175,11 +192,10 @@ class _CreateNewBankAccountState extends State<CreateNewBankAccount> {
 
   _onInitialAmountSaved(initialAmount) => _bankAccount.amount = initialAmount;
 
-  _onAccountTypeSaved(accountType) => _bankAccount.type = accountType;
-
   createAccount() async {
     if (_createBankAccountFormKey.currentState!.validate()) {
       _createBankAccountFormKey.currentState!.save();
+      _bankAccount.type = _selectAccountType;
       await DatabaseHelper.instance
           .createNewBankAccount(_bankAccount)
           .then((value) {
@@ -200,5 +216,29 @@ class _CreateNewBankAccountState extends State<CreateNewBankAccount> {
     setState(() {
       _autoValidate = true;
     });
+  }
+
+  _handleRadioValue(value) {
+    switch (value) {
+      case 1:
+        setState(() {
+          _radioGroupValue = value;
+          _selectAccountType = "Current Account";
+        });
+
+        break;
+      case 2:
+        setState(() {
+          _radioGroupValue = value;
+          _selectAccountType = "Saving Account";
+        });
+        break;
+      case 3:
+        setState(() {
+          _radioGroupValue = value;
+          _selectAccountType = "Fixed Deposit Account";
+        });
+        break;
+    }
   }
 }
