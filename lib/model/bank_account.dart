@@ -2,6 +2,7 @@ class BankAccount {
   int? accountID;
   int? userID;
   String? accountNumber;
+  String? bankName;
   String? branch;
   String? amount;
   String? type;
@@ -10,6 +11,7 @@ class BankAccount {
       {this.accountID,
       this.userID,
       this.accountNumber,
+      this.bankName,
       this.branch,
       this.amount,
       this.type});
@@ -18,6 +20,7 @@ class BankAccount {
     accountID = json['account_id'];
     userID = json['user_id'];
     accountNumber = json['account_number'];
+    bankName = json['bank_name'];
     branch = json['branch'];
     amount = json['amount'];
     type = json['type'];
@@ -28,6 +31,7 @@ class BankAccount {
     data['account_id'] = this.accountID;
     data['user_id'] = this.userID;
     data['account_number'] = this.accountNumber;
+    data['bank_name'] = this.bankName;
     data['branch'] = this.branch;
     data['amount'] = this.amount;
     data['type'] = this.type;

@@ -20,6 +20,7 @@ class DatabaseHelper {
 
   static final String accountID = 'account_id';
   static final String accountNumber = 'account_number';
+  static final String bankName = 'bank_name';
   static final String branch = 'branch';
   static final String amount = 'amount';
   static final String type = 'type';
@@ -63,6 +64,7 @@ class DatabaseHelper {
     $accountID $idType,
     $userID $intType,
     $accountNumber $textType,
+    $bankName $textType,
     $branch $textType,
     $amount $textType,
     $type $textType,
@@ -106,6 +108,19 @@ class DatabaseHelper {
       throw Exception('ID: $id was not found');
     }
   }
+
+  Future<List<BankAccount>> getBankAccountData(int id) async {
+    final db = await instance.database;
+    var res = await db.rawQuery("SELECT * FROM $tableAccounts WHERE "
+        "$userID = '$id'");
+
+    if (res.isNotEmpty) {
+      return res.map((json) => BankAccount.fromJson(json)).toList();
+    } else {
+      throw Exception('ID: $id was not found');
+    }
+  }
+
 
   Future<List<AppUser>> showAllData() async {
     final db = await instance.database;

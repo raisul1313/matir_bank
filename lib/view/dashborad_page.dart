@@ -1,8 +1,12 @@
+import 'dart:async';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:matir_bank/custom_ui/custom_account_item.dart';
 import 'package:matir_bank/datatbase_helper/database_helper.dart';
 import 'package:matir_bank/model/app_user.dart';
+import 'package:matir_bank/model/bank_account.dart';
 import 'package:matir_bank/utils/page_utils.dart';
 import 'package:matir_bank/utils/values/palette.dart';
 import 'package:matir_bank/view/create_new_bank_account.dart';
@@ -19,20 +23,35 @@ class _DashboardPageState extends State<DashboardPage> {
   late double _pageHeight;
   late double _pageWidth;
   late AppUser _appUser;
+  late BankAccount _bankAccount;
   late int id;
+  late List<BankAccount> _bankAccountList;
 
   @override
   void initState() {
     super.initState();
     _appUser = AppUser();
-    getUserInfo();
+    _bankAccount = BankAccount();
+    _bankAccountList = [];
+    //getUserInfo();
+    getBankAccountInfo();
   }
 
-  void getUserInfo() async {
+  /* void getUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await DatabaseHelper.instance
         .getUserData(prefs.getInt('id')!)
         .then((value) => _appUser = value);
+  }*/
+
+  void getBankAccountInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await DatabaseHelper.instance
+        .getBankAccountData(prefs.getInt('id')!)
+        .then((value) {
+      _bankAccountList = value;
+      setState(() {});
+    });
   }
 
   @override
@@ -60,20 +79,33 @@ class _DashboardPageState extends State<DashboardPage> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-            child: Container(
-              child: Text(
-                "Welcome " + _appUser.userName.toString(),
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-              ),
-            ),
+      body: Container(
+        height: _pageHeight,
+        width: _pageWidth,
+        color: Colors.grey.shade200,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [_getAccountListWidget()],
           ),
-          AccountItem(),
-        ],
+        ),
       ),
     );
+  }
+
+  _getAccountListWidget() {
+    return _bankAccountList.isNotEmpty
+        ? ListView.builder(
+            itemCount: _bankAccountList.length,
+            shrinkWrap: true,
+            physics: BouncingScrollPhysics(),
+            padding: EdgeInsets.all(5),
+            scrollDirection: Axis.vertical,
+            itemBuilder: (context, index) {
+              return ItemAccount(
+                bankAccount: _bankAccountList[index],
+              );
+            },
+          )
+        : Center(child: Text('No Account Found'));
   }
 }

@@ -240,16 +240,11 @@ class _LogInPageState extends State<LogInPage> {
                 ),
                 (Route<dynamic> route) => false);
           });
-        } else {
-          Fluttertoast.showToast(
-            msg: "Error: User Not Found",
-            backgroundColor: Palette.orangeShade,
-          );
         }
       }).catchError((error) {
         print(error);
         Fluttertoast.showToast(
-          msg: "Error: Login Fail",
+          msg: "Login Fail",
           backgroundColor: Palette.orangeShade,
         );
       });

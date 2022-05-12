@@ -6,6 +6,8 @@ import 'package:matir_bank/datatbase_helper/database_helper.dart';
 import 'package:matir_bank/model/bank_account.dart';
 import 'package:matir_bank/utils/page_utils.dart';
 import 'package:matir_bank/utils/values/palette.dart';
+import 'package:matir_bank/view/dashborad_page.dart';
+import 'package:matir_bank/view/landing_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateNewBankAccount extends StatefulWidget {
@@ -84,6 +86,19 @@ class _CreateNewBankAccountState extends State<CreateNewBankAccount> {
                       : AutovalidateMode.disabled,
                   child: Column(
                     children: [
+                      CustomTextFormField(
+                        label: "Bank Name",
+                        hint: "Enter Bank Name",
+                        borderRadius: 5,
+                        prefixIcon: Icon(Icons.account_circle),
+                        //validator: FormValidator.validateTextForm,
+                        onSaved: _onBankNameNoSaved,
+                        inputType: TextInputType.name,
+                        textInputAction: TextInputAction.next,
+                      ),
+                      SizedBox(
+                        height: _pageHeight * 0.02,
+                      ),
                       CustomTextFormField(
                         label: "Account No.",
                         hint: "Enter Account No.",
@@ -188,6 +203,8 @@ class _CreateNewBankAccountState extends State<CreateNewBankAccount> {
 
   _onAccountNoSaved(accountNo) => _bankAccount.accountNumber = accountNo;
 
+  _onBankNameNoSaved(bankName) => _bankAccount.bankName = bankName;
+
   _onBranchNameSaved(branchName) => _bankAccount.branch = branchName;
 
   _onInitialAmountSaved(initialAmount) => _bankAccount.amount = initialAmount;
@@ -210,7 +227,12 @@ class _CreateNewBankAccountState extends State<CreateNewBankAccount> {
             backgroundColor: Palette.orangeShade,
           );
         }
-        Navigator.pop(context);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (_) => LandingPage(),
+            ),
+                (Route<dynamic> route) => false);
       });
     }
     setState(() {

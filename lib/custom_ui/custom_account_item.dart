@@ -1,100 +1,74 @@
 import 'package:flutter/material.dart';
+import 'package:matir_bank/model/bank_account.dart';
+import 'package:matir_bank/utils/values/palette.dart';
 
-class AccountItem extends StatelessWidget {
-  //final Movie movie;
-  //final Function itemClick;
-
-  const AccountItem({
-    Key? key,
-    //required this.movie,
-    //required this.itemClick,
-  }) : super(key: key);
+class ItemAccount extends StatelessWidget {
+  final BankAccount bankAccount;
+  const ItemAccount({Key? key, required this.bankAccount}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return GestureDetector(
-      //onTap: () => itemClick(movie),
       child: Card(
         color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Row(
+        child: Container(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                  flex: 1,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                    ),
-                    /*child: CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => SizedBox(
-                        child: Image.asset("assets/images/load.png"),
-                      ),
-                      imageUrl: movie.imageUrl!,
-                      errorWidget: (context, url, error) {
-                        print(error);
-                        return Icon(
-                          Icons.error,
-                          color: Colors.red,
-                        );
-                      },
-                    ),*/
-                  )),
-              Expanded(
-                flex: 3,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 5.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      /*Text(
-                        movie.movieName!,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
+              Container(
+                height: 20,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      bankAccount.bankName.toString(),
+                      style: TextStyle(
                           fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),*/
-                      SizedBox(
-                        height: 2,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                          color: Palette.orangeShade.shade900,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              Divider(
+                thickness: 3.0,
+                color: Palette.orangeShade.shade900,
+              ),
+              Container(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
                         children: [
-                          /*Expanded(
-                              flex: 0,
-                              child: Text(movie.movieYear!.toString() + ",")),
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              movie.movieDirector!,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          )*/
+                          Text("Type: "),
+                          Text(bankAccount.type.toString()),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Text("Account Number: "),
+                          Text(bankAccount.accountNumber.toString()),
                         ],
                       ),
-                      SizedBox(
-                        height: 4,
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Text("Available Balance: "),
+                          Text(bankAccount.amount!),
+                          //bankAccount.amount!,
+                        ],
                       ),
-                      /*Text(
-                        movie.movieDescription!,
-                        maxLines: 5,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.justify,
-                      ),*/
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               )
             ],
           ),
         ),
       ),
+      onLongPress: (){},
+      onTap: (){},
     );
   }
 }
