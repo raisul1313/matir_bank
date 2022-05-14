@@ -6,18 +6,17 @@ import 'package:matir_bank/datatbase_helper/database_helper.dart';
 import 'package:matir_bank/model/bank_account.dart';
 import 'package:matir_bank/utils/page_utils.dart';
 import 'package:matir_bank/utils/values/palette.dart';
-import 'package:matir_bank/view/dashborad_page.dart';
 import 'package:matir_bank/view/landing_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class CreateNewBankAccount extends StatefulWidget {
-  const CreateNewBankAccount({Key? key}) : super(key: key);
+class CreateBankAccount extends StatefulWidget {
+  const CreateBankAccount({Key? key}) : super(key: key);
 
   @override
-  State<CreateNewBankAccount> createState() => _CreateNewBankAccountState();
+  State<CreateBankAccount> createState() => _CreateBankAccountState();
 }
 
-class _CreateNewBankAccountState extends State<CreateNewBankAccount> {
+class _CreateBankAccountState extends State<CreateBankAccount> {
   final _createBankAccountFormKey = GlobalKey<FormState>();
   bool _autoValidate = false;
   late double _pageHeight;

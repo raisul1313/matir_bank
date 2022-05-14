@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:matir_bank/utils/page_utils.dart';
 import 'package:matir_bank/view/dashborad_page.dart';
 import 'package:matir_bank/view/profile_page.dart';
@@ -27,14 +28,11 @@ class _LandingPageState extends State<LandingPage> {
     _pageHeight = MediaQuery.of(context).size.height;
     _pageWidth = PageUtils.getPageWidth(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Matir Bank'),
-        centerTitle: true,
-      ),
       body: pages[pageIndex],
       bottomNavigationBar: buildNavBar(context),
     );
   }
+
   Container buildNavBar(BuildContext context) {
     return Container(
       height: 50,
@@ -53,15 +51,15 @@ class _LandingPageState extends State<LandingPage> {
             },
             icon: pageIndex == 0
                 ? const Icon(
-              Icons.widgets_rounded,
-              color: Colors.white,
-              size: 30,
-            )
+                    Icons.widgets_rounded,
+                    color: Colors.white,
+                    size: 30,
+                  )
                 : const Icon(
-              Icons.widgets_outlined,
-              color: Colors.white,
-              size: 30,
-            ),
+                    Icons.widgets_outlined,
+                    color: Colors.white,
+                    size: 30,
+                  ),
           ),
           IconButton(
             enableFeedback: false,
@@ -72,15 +70,15 @@ class _LandingPageState extends State<LandingPage> {
             },
             icon: pageIndex == 1
                 ? const Icon(
-              Icons.person,
-              color: Colors.white,
-              size: 30,
-            )
+                    Icons.person,
+                    color: Colors.white,
+                    size: 30,
+                  )
                 : const Icon(
-              Icons.person_outline,
-              color: Colors.white,
-              size: 30,
-            ),
+                    Icons.person_outline,
+                    color: Colors.white,
+                    size: 30,
+                  ),
           ),
           IconButton(
             enableFeedback: false,
@@ -91,15 +89,15 @@ class _LandingPageState extends State<LandingPage> {
             },
             icon: pageIndex == 2
                 ? const Icon(
-              Icons.workspaces_filled,
-              color: Colors.white,
-              size: 30,
-            )
+                    Icons.workspaces_filled,
+                    color: Colors.white,
+                    size: 30,
+                  )
                 : const Icon(
-              Icons.workspaces_outline,
-              color: Colors.white,
-              size: 30,
-            ),
+                    Icons.workspaces_outline,
+                    color: Colors.white,
+                    size: 30,
+                  ),
           ),
         ],
       ),

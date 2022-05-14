@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:matir_bank/custom_ui/custom_button.dart';
 import 'package:matir_bank/utils/values/palette.dart';
 import 'package:matir_bank/view/log_in_page.dart';
@@ -14,12 +15,20 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Settings',
+          style: GoogleFonts.handlee(
+              fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20.0),
+        ),
+        centerTitle: true,
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              width: 150,
+              width: 100,
               child: CustomButton(
                 buttonHeight: 50,
                 buttonName: 'Log Out',

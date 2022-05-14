@@ -101,7 +101,6 @@ class DatabaseHelper {
     final db = await instance.database;
     var res = await db.rawQuery("SELECT * FROM $tableUsers WHERE "
         "$userID = '$id'");
-
     if (res.isNotEmpty) {
       return AppUser.fromJson(res.first);
     } else {
@@ -109,7 +108,7 @@ class DatabaseHelper {
     }
   }
 
-  Future<List<BankAccount>> getBankAccountData(int id) async {
+  Future<List<BankAccount>> getListBankAccountData(int id) async {
     final db = await instance.database;
     var res = await db.rawQuery("SELECT * FROM $tableAccounts WHERE "
         "$userID = '$id'");
@@ -121,14 +120,13 @@ class DatabaseHelper {
     }
   }
 
-
   Future<List<AppUser>> showAllData() async {
     final db = await instance.database;
     final result = await db.query(tableUsers);
     return result.map((json) => AppUser.fromJson(json)).toList();
   }
 
-  Future<int> update(AppUser appUser) async {
+  Future<int> userDetailsUpdate(AppUser appUser) async {
     final db = await instance.database;
     return db.update(
       tableUsers,
@@ -138,7 +136,7 @@ class DatabaseHelper {
     );
   }
 
-  Future<int> delete(int id) async {
+  Future<int> userDelete(int id) async {
     final db = await instance.database;
     return await db.delete(
       tableUsers,

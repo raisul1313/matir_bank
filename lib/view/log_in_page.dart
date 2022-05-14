@@ -186,18 +186,15 @@ class _LogInPageState extends State<LogInPage> {
                       itemCount: appUserList.length + 1,
                       itemBuilder: (BuildContext context, int index) {
                         if (index == appUserList.length) {
-                          return SizedBox(
-                            width: 150,
-                            child: CustomButton(
-                              buttonName: 'Refresh',
-                              buttonHeight: 50,
-                              backgroundColor: Palette.orangeShade.shade700,
-                              onButtonPressed: () {
-                                setState(() {
-                                  _queryAll();
-                                });
-                              },
-                            ),
+                          return CustomButton(
+                            buttonName: 'Refresh',
+                            buttonHeight: 50,
+                            backgroundColor: Palette.orangeShade.shade700,
+                            onButtonPressed: () {
+                              setState(() {
+                                _queryAll();
+                              });
+                            },
                           );
                         }
                         return Container(
