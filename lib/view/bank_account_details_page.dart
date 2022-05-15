@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:matir_bank/custom_ui/custom_button.dart';
 import 'package:matir_bank/model/bank_account.dart';
 import 'package:matir_bank/utils/values/palette.dart';
@@ -19,7 +20,9 @@ class _BankAccountDetailsState extends State<BankAccountDetails> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Bank Account No. " + widget.bankAccount.accountID.toString(),
+          'Account Details',
+          style: GoogleFonts.handlee(
+              fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20.0),
         ),
         centerTitle: true,
       ),
@@ -30,149 +33,137 @@ class _BankAccountDetailsState extends State<BankAccountDetails> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Account Details",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15.0,
-                      color: Colors.black),
+                SizedBox(
+                  height: size.height * 0.02,
                 ),
-                Column(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      height: size.height * 0.02,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Bank Name:",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15.0,
-                                  color: Palette.orangeShade),
-                            ),
-                            Text(
-                              "Account Type:",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15.0,
-                                  color: Palette.orangeShade),
-                            ),
-                            Text(
-                              "Account Number:",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15.0,
-                                  color: Palette.orangeShade),
-                            ),
-                            Text(
-                              "Branch Name:",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15.0,
-                                  color: Palette.orangeShade),
-                            ),
-                            Text(
-                              "Total Amount:",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15.0,
-                                  color: Palette.orangeShade),
-                            ),
-                          ],
+                        Text(
+                          "Bank Name:",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15.0,
+                              color: Palette.orangeShade),
                         ),
-                        SizedBox(
-                          width: 15.0,
+                        Text(
+                          "Account Type:",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15.0,
+                              color: Palette.orangeShade),
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.bankAccount.bankName.toString(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15.0,
-                                  color: Colors.black),
-                            ),
-                            Text(
-                              widget.bankAccount.type.toString(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15.0,
-                                  color: Colors.black),
-                            ),
-                            Text(
-                              widget.bankAccount.accountNumber.toString(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15.0,
-                                  color: Colors.black),
-                            ),
-                            Text(
-                              widget.bankAccount.branch.toString(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15.0,
-                                  color: Colors.black),
-                            ),
-                            Text(
-                              widget.bankAccount.amount.toString(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15.0,
-                                  color: Colors.black),
-                            )
-                          ],
+                        Text(
+                          "Account Number:",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15.0,
+                              color: Palette.orangeShade),
+                        ),
+                        Text(
+                          "Branch Name:",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15.0,
+                              color: Palette.orangeShade),
+                        ),
+                        Text(
+                          "Total Amount:",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15.0,
+                              color: Palette.orangeShade),
                         ),
                       ],
                     ),
                     SizedBox(
-                      height: size.height * 0.05,
+                      width: 15.0,
                     ),
-                    Text(
-                      "Want to add/withdraw money",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontStyle: FontStyle.italic,
-                          color: Colors.grey),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.02,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          width: 100,
-                          child: CustomButton(
-                            buttonName: 'Add',
-                            buttonHeight: 50,
-                            backgroundColor: Palette.orangeShade.shade700,
-                            onButtonPressed: () => null,
-                          ),
+                        Text(
+                          widget.bankAccount.bankName.toString(),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15.0,
+                              color: Colors.black),
                         ),
-                        SizedBox(
-                          width: size.width * 0.1,
+                        Text(
+                          widget.bankAccount.type.toString(),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15.0,
+                              color: Colors.black),
                         ),
-                        SizedBox(
-                          width: 100,
-                          child: CustomButton(
-                            buttonName: 'Withdraw',
-                            buttonHeight: 50,
-                            backgroundColor: Palette.orangeShade.shade700,
-                            onButtonPressed: () => null,
-                          ),
+                        Text(
+                          widget.bankAccount.accountNumber.toString(),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15.0,
+                              color: Colors.black),
                         ),
+                        Text(
+                          widget.bankAccount.branch.toString(),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15.0,
+                              color: Colors.black),
+                        ),
+                        Text(
+                          widget.bankAccount.amount.toString(),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15.0,
+                              color: Colors.black),
+                        )
                       ],
-                    )
+                    ),
                   ],
                 ),
+                SizedBox(
+                  height: size.height * 0.05,
+                ),
+                Text(
+                  "Want to add/withdraw money",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.grey),
+                ),
+                SizedBox(
+                  height: size.height * 0.02,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 100,
+                      child: CustomButton(
+                        buttonName: 'Add',
+                        buttonHeight: 50,
+                        backgroundColor: Palette.orangeShade.shade700,
+                        onButtonPressed: () => null,
+                      ),
+                    ),
+                    SizedBox(
+                      width: size.width * 0.1,
+                    ),
+                    SizedBox(
+                      width: 100,
+                      child: CustomButton(
+                        buttonName: 'Withdraw',
+                        buttonHeight: 50,
+                        backgroundColor: Palette.orangeShade.shade700,
+                        onButtonPressed: () => null,
+                      ),
+                    ),
+                  ],
+                )
               ],
             ),
           ),

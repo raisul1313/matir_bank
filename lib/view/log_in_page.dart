@@ -241,7 +241,7 @@ class _LogInPageState extends State<LogInPage> {
       }).catchError((error) {
         print(error);
         Fluttertoast.showToast(
-          msg: "Login Fail",
+          msg: "Login Failed",
           backgroundColor: Palette.orangeShade,
         );
       });

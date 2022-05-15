@@ -4,6 +4,7 @@ import 'package:matir_bank/custom_ui/custom_button.dart';
 import 'package:matir_bank/datatbase_helper/database_helper.dart';
 import 'package:matir_bank/model/app_user.dart';
 import 'package:matir_bank/utils/values/palette.dart';
+import 'package:matir_bank/view/log_in_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -212,7 +213,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         buttonName: 'Delete',
                         buttonHeight: 50,
                         backgroundColor: Palette.orangeShade.shade700,
-                        onButtonPressed: () => null,
+                        onButtonPressed: _userDelete
                       ),
                     ),
                   ],
@@ -223,5 +224,12 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
+  }
+
+  _userDelete() async {
+    await DatabaseHelper.instance.userDelete(_appUser.userID!);
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => LogInPage()),
+            (Route<dynamic> route) => false);
   }
 }

@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:matir_bank/model/bank_account.dart';
 import 'package:matir_bank/utils/values/palette.dart';
 
 class ItemAccount extends StatefulWidget {
   final BankAccount bankAccount;
   final Function itemClick;
+  final Function itemLongClick;
 
   const ItemAccount(
-      {Key? key, required this.bankAccount, required this.itemClick})
+      {Key? key,
+      required this.bankAccount,
+      required this.itemClick,
+      required this.itemLongClick})
       : super(key: key);
 
   @override
@@ -103,8 +108,8 @@ class _ItemAccountState extends State<ItemAccount> {
           ),
         ),
       ),
-      onLongPress: () {},
       onTap: () => widget.itemClick(widget.bankAccount),
+      onLongPress: () => widget.itemLongClick(widget.bankAccount),
     );
   }
 }

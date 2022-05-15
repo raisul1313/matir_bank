@@ -6,6 +6,7 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseHelper {
   final String tableUsers = 'user_table';
   final String tableAccounts = 'account_table';
+  final int version = 1;
 
   static final String userID = 'user_id';
   static final String userName = 'user_name';
@@ -39,7 +40,7 @@ class DatabaseHelper {
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
-    return await openDatabase(path, version: 1, onCreate: _onCreate);
+    return await openDatabase(path, version: version, onCreate: _onCreate);
   }
 
   Future _onCreate(Database db, int version) async {
@@ -133,6 +134,15 @@ class DatabaseHelper {
       appUser.toJson(),
       where: '$userID = ?',
       whereArgs: [appUser.userID],
+    );
+  }
+
+  Future<int> bankAccountDelete(int id) async {
+    final db = await instance.database;
+    return await db.delete(
+      tableAccounts,
+      where: '$accountID = ?',
+      whereArgs: [id],
     );
   }
 
