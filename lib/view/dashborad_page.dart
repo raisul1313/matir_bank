@@ -11,6 +11,7 @@ import 'package:matir_bank/utils/page_utils.dart';
 import 'package:matir_bank/utils/values/palette.dart';
 import 'package:matir_bank/view/bank_account_details_page.dart';
 import 'package:matir_bank/view/create_bank_account_page.dart';
+import 'package:matir_bank/view/profile_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -24,9 +25,11 @@ class _DashboardPageState extends State<DashboardPage> {
   late double _pageHeight;
   late double _pageWidth;
   late List<BankAccount> _bankAccountList;
+  late BankAccount _bankAccount;
 
   @override
   void initState() {
+    _bankAccount = BankAccount();
     _bankAccountList = [];
     getBankAccountInfo();
     super.initState();
@@ -152,6 +155,22 @@ class _DashboardPageState extends State<DashboardPage> {
         PopupMenuItem(child: const Text('Edit'), value: 1),
         PopupMenuItem(child: const Text('Delete'), value: 2),
       ],
-    );
+    ).then((value) {
+      switch (value) {
+        case 1:
+          Fluttertoast.showToast(
+            msg: "Edit",
+            backgroundColor: Palette.orangeShade,
+          );
+          break;
+
+        case 2:
+          Fluttertoast.showToast(
+            msg: "Delete",
+            backgroundColor: Palette.orangeShade,
+          );
+          break;
+      }
+    });
   }
 }

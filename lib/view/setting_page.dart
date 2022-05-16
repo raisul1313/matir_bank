@@ -33,14 +33,38 @@ class _SettingsPageState extends State<SettingsPage> {
                 buttonHeight: 50,
                 buttonName: 'Log Out',
                 backgroundColor: Palette.orangeShade.shade700,
-                onButtonPressed: () => Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => LogInPage()),
-                        (Route<dynamic> route) => false),
+                onButtonPressed: () => showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: Text(
+                      "Log Out",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Palette.orangeShade.shade900),
+                    ),
+                    content:
+                        const Text("Are you sure that you want logout !"),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, 'No'),
+                        child: const Text('No'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context)
+                            .pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) => LogInPage()),
+                                (Route<dynamic> route) => false),
+                        child: const Text('Yes'),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ],
         ),
-      ) ,
+      ),
     );
   }
 }

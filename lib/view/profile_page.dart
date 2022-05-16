@@ -42,9 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
         title: Text(
           'Profile Details',
           style: GoogleFonts.handlee(
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              fontSize: 20.0),
+              fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20.0),
         ),
         centerTitle: true,
       ),
@@ -213,7 +211,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         buttonName: 'Delete',
                         buttonHeight: 50,
                         backgroundColor: Palette.orangeShade.shade700,
-                        onButtonPressed: _userDelete
+                        onButtonPressed: () async {
+                          await showDeleteUserDialog();
+                        },
                       ),
                     ),
                   ],
@@ -226,10 +226,37 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  Future<void> showDeleteUserDialog() async {
+    return await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "Delete User Account!",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Palette.orangeShade.shade900),
+            ),
+            content: const Text(
+                "Are you sure that you want to delete your account? "),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.pop(context, 'No'),
+                child: const Text('No'),
+              ),
+              TextButton(
+                onPressed: () => _userDelete(),
+                child: const Text('Yes'),
+              ),
+            ],
+          );
+        });
+  }
+
   _userDelete() async {
     await DatabaseHelper.instance.userDelete(_appUser.userID!);
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => LogInPage()),
-            (Route<dynamic> route) => false);
+        (Route<dynamic> route) => false);
   }
 }

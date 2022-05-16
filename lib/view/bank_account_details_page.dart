@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:matir_bank/custom_ui/custom_button.dart';
+import 'package:matir_bank/custom_ui/custom_text_form_field.dart';
+import 'package:matir_bank/datatbase_helper/database_helper.dart';
 import 'package:matir_bank/model/bank_account.dart';
 import 'package:matir_bank/utils/values/palette.dart';
 
 class BankAccountDetails extends StatefulWidget {
   final BankAccount bankAccount;
+
   const BankAccountDetails({Key? key, required this.bankAccount})
       : super(key: key);
 
@@ -14,9 +17,23 @@ class BankAccountDetails extends StatefulWidget {
 }
 
 class _BankAccountDetailsState extends State<BankAccountDetails> {
+  final _amountFormKey = GlobalKey<FormState>();
+  bool _autoValidate = false;
+  late double addWithdrawAmount;
+  late int id;
+
+  @override
+  void initState() {
+    addWithdrawAmount = 0.0;
+    id = 0;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery
+        .of(context)
+        .size;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -138,31 +155,11 @@ class _BankAccountDetailsState extends State<BankAccountDetails> {
                 SizedBox(
                   height: size.height * 0.02,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 100,
-                      child: CustomButton(
-                        buttonName: 'Add',
-                        buttonHeight: 50,
-                        backgroundColor: Palette.orangeShade.shade700,
-                        onButtonPressed: () => null,
-                      ),
-                    ),
-                    SizedBox(
-                      width: size.width * 0.1,
-                    ),
-                    SizedBox(
-                      width: 100,
-                      child: CustomButton(
-                        buttonName: 'Withdraw',
-                        buttonHeight: 50,
-                        backgroundColor: Palette.orangeShade.shade700,
-                        onButtonPressed: () => null,
-                      ),
-                    ),
-                  ],
+                CustomButton(
+                  buttonName: 'Add/Withdraw Money',
+                  buttonHeight: 50,
+                  backgroundColor: Palette.orangeShade.shade700,
+                  onButtonPressed: () => showAddWithdrawAmountDialog(),
                 )
               ],
             ),
@@ -171,4 +168,76 @@ class _BankAccountDetailsState extends State<BankAccountDetails> {
       ),
     );
   }
+
+  Future<void> showAddWithdrawAmountDialog() async {
+    return await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "Add/Withdraw Money",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            content: Form(
+              key: _amountFormKey,
+              autovalidateMode: _autoValidate
+                  ? AutovalidateMode.always
+                  : AutovalidateMode.disabled,
+              child: CustomTextFormField(
+                label: "Amount",
+                hint: "Enter Amount",
+                borderRadius: 5,
+                prefixIcon: Icon(Icons.attach_money),
+                //validator: FormValidator.validateTextForm,
+                onSaved: _onNewAmountSaved,
+                inputType: TextInputType.number,
+              ),
+            ),
+            actions: [
+              SizedBox(
+                width: 100,
+                child: CustomButton(
+                    buttonName: 'Add',
+                    buttonHeight: 50,
+                    backgroundColor: Palette.orangeShade.shade700,
+                    onButtonPressed: addAmount
+                ),
+              ),
+              SizedBox(
+                width: 100,
+                child: CustomButton(
+                    buttonName: 'Withdraw',
+                    buttonHeight: 50,
+                    backgroundColor: Palette.orangeShade.shade700,
+                    onButtonPressed: withdrawAmount
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
+  _onNewAmountSaved(amount) => addWithdrawAmount = (amount);
+
+  addAmount() async {
+    if (_amountFormKey.currentState!.validate()) {
+      _amountFormKey.currentState!.save();
+
+    }
+    setState(() {
+      _autoValidate = true;
+    });
+  }
+
+  withdrawAmount() async {
+    if (_amountFormKey.currentState!.validate()) {
+      _amountFormKey.currentState!.save();
+    }
+    setState(() {
+      _autoValidate = true;
+    });
+  }
+
 }

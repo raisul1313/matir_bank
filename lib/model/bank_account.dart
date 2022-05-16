@@ -4,7 +4,7 @@ class BankAccount {
   String? accountNumber;
   String? bankName;
   String? branch;
-  String? amount;
+  double? amount;
   String? type;
 
   BankAccount(

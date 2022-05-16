@@ -46,6 +46,7 @@ class DatabaseHelper {
   Future _onCreate(Database db, int version) async {
     final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     final intType = 'INTEGER NOT NULL';
+    final doubleType = 'DOUBLE NOT NULL';
     final textType = 'TEXT NOT NULL';
     final realType = 'REAL NOT NULL';
     await db.execute('''CREATE TABLE $tableUsers ( 
@@ -67,7 +68,7 @@ class DatabaseHelper {
     $accountNumber $textType,
     $bankName $textType,
     $branch $textType,
-    $amount $textType,
+    $amount $doubleType,
     $type $textType,
     FOREIGN KEY ($userID) REFERENCES $tableUsers($userID)
     )''');
@@ -81,7 +82,11 @@ class DatabaseHelper {
 
   Future<bool> createNewBankAccount(BankAccount bankAccount) async {
     final db = await instance.database;
-    final accountID = await db.insert(tableAccounts, bankAccount.toJson());
+    final accountID = await db.insert(
+      tableAccounts,
+      bankAccount.toJson(),
+      //conflictAlgorithm: ConflictAlgorithm.replace,
+    );
     return accountID != null ? true : false;
   }
 
@@ -104,6 +109,17 @@ class DatabaseHelper {
         "$userID = '$id'");
     if (res.isNotEmpty) {
       return AppUser.fromJson(res.first);
+    } else {
+      throw Exception('ID: $id was not found');
+    }
+  }
+
+  Future<BankAccount> getBankAccountData(int id) async {
+    final db = await instance.database;
+    var res = await db.rawQuery("SELECT * FROM $tableAccounts WHERE "
+        "$accountID = '$id'");
+    if (res.isNotEmpty) {
+      return BankAccount.fromJson(res.first);
     } else {
       throw Exception('ID: $id was not found');
     }

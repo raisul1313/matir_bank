@@ -63,7 +63,7 @@ class _CreateBankAccountState extends State<CreateBankAccount> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 10.0),
                     child: Text(
-                      'Create new Bank Account',
+                      'Create New Bank Account',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20.0,
@@ -105,7 +105,7 @@ class _CreateBankAccountState extends State<CreateBankAccount> {
                         prefixIcon: Icon(Icons.account_circle),
                         //validator: FormValidator.validateTextForm,
                         onSaved: _onAccountNoSaved,
-                        inputType: TextInputType.name,
+                        inputType: TextInputType.number,
                         textInputAction: TextInputAction.next,
                       ),
                       SizedBox(
@@ -125,13 +125,13 @@ class _CreateBankAccountState extends State<CreateBankAccount> {
                         height: _pageHeight * 0.02,
                       ),
                       CustomTextFormField(
-                        label: "Amount",
+                        label: "Initial Amount",
                         hint: "Enter Initial Amount",
                         borderRadius: 5,
                         prefixIcon: Icon(Icons.add),
                         //validator: FormValidator.validateTextForm,
                         onSaved: _onInitialAmountSaved,
-                        inputType: TextInputType.name,
+                        inputType: TextInputType.number,
                         textInputAction: TextInputAction.next,
                       ),
                       SizedBox(
@@ -206,7 +206,7 @@ class _CreateBankAccountState extends State<CreateBankAccount> {
 
   _onBranchNameSaved(branchName) => _bankAccount.branch = branchName;
 
-  _onInitialAmountSaved(initialAmount) => _bankAccount.amount = initialAmount;
+  _onInitialAmountSaved(initialAmount) =>_bankAccount.amount = double.parse(initialAmount);
 
   createAccount() async {
     if (_createBankAccountFormKey.currentState!.validate()) {

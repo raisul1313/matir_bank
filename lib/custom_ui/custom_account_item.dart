@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:matir_bank/model/bank_account.dart';
 import 'package:matir_bank/utils/values/palette.dart';
 
-class ItemAccount extends StatefulWidget {
+class ItemAccount extends StatelessWidget {
   final BankAccount bankAccount;
   final Function itemClick;
   final Function itemLongClick;
@@ -15,12 +14,7 @@ class ItemAccount extends StatefulWidget {
       required this.itemLongClick})
       : super(key: key);
 
-  @override
-  State<ItemAccount> createState() => _ItemAccountState();
-}
-
-class _ItemAccountState extends State<ItemAccount> {
-  @override
+@override
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Card(
@@ -30,7 +24,7 @@ class _ItemAccountState extends State<ItemAccount> {
           child: Column(
             children: [
               Text(
-                widget.bankAccount.bankName.toString(),
+                bankAccount.bankName.toString(),
                 style: TextStyle(
                     fontSize: 20.0,
                     color: Palette.orangeShade.shade800,
@@ -53,7 +47,7 @@ class _ItemAccountState extends State<ItemAccount> {
                                 fontWeight: FontWeight.bold,
                               )),
                           Text(
-                            widget.bankAccount.type.toString(),
+                            bankAccount.type.toString(),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Palette.orangeShade),
@@ -66,7 +60,7 @@ class _ItemAccountState extends State<ItemAccount> {
                                 fontWeight: FontWeight.bold,
                               )),
                           Text(
-                            widget.bankAccount.accountNumber.toString(),
+                            bankAccount.accountNumber.toString(),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Palette.orangeShade),
@@ -91,7 +85,7 @@ class _ItemAccountState extends State<ItemAccount> {
                             height: 15.0,
                           ),
                           Text(
-                            "৳ " + widget.bankAccount.amount!,
+                            "৳ " + bankAccount.amount.toString(),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20.0,
@@ -108,8 +102,8 @@ class _ItemAccountState extends State<ItemAccount> {
           ),
         ),
       ),
-      onTap: () => widget.itemClick(widget.bankAccount),
-      onLongPress: () => widget.itemLongClick(widget.bankAccount),
+      onTap: () => itemClick(bankAccount),
+      onLongPress: () => itemLongClick(bankAccount),
     );
   }
 }
