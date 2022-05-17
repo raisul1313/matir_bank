@@ -15,8 +15,6 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
-  late double _pageHeight;
-  late double _pageWidth;
   int pageIndex = 0;
   final pages = [
     const DashboardPage(),
@@ -24,10 +22,9 @@ class _LandingPageState extends State<LandingPage> {
     const SettingsPage(),
   ];
 
+
   @override
   Widget build(BuildContext context) {
-    _pageHeight = MediaQuery.of(context).size.height;
-    _pageWidth = PageUtils.getPageWidth(context);
     return Scaffold(
       body: pages[pageIndex],
       bottomNavigationBar: buildNavBar(context),

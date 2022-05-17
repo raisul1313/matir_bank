@@ -153,6 +153,16 @@ class DatabaseHelper {
     );
   }
 
+  Future<int> bankAccountDetailsUpdate(BankAccount bankAccount) async {
+    final db = await instance.database;
+    return db.update(
+      tableAccounts,
+      bankAccount.toJson(),
+      where: '$accountID = ?',
+      whereArgs: [bankAccount.accountID],
+    );
+  }
+
   Future<int> bankAccountDelete(int id) async {
     final db = await instance.database;
     return await db.delete(

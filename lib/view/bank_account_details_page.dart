@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:matir_bank/custom_ui/custom_button.dart';
@@ -20,12 +22,10 @@ class _BankAccountDetailsState extends State<BankAccountDetails> {
   final _amountFormKey = GlobalKey<FormState>();
   bool _autoValidate = false;
   late double addWithdrawAmount;
-  late int id;
 
   @override
   void initState() {
     addWithdrawAmount = 0.0;
-    id = 0;
     super.initState();
   }
 
@@ -159,7 +159,7 @@ class _BankAccountDetailsState extends State<BankAccountDetails> {
                   buttonName: 'Add/Withdraw Money',
                   buttonHeight: 50,
                   backgroundColor: Palette.orangeShade.shade700,
-                  onButtonPressed: () => showAddWithdrawAmountDialog(),
+                  onButtonPressed: _showAddWithdrawAmountDialog,
                 )
               ],
             ),
@@ -169,8 +169,8 @@ class _BankAccountDetailsState extends State<BankAccountDetails> {
     );
   }
 
-  Future<void> showAddWithdrawAmountDialog() async {
-    return await showDialog(
+  _showAddWithdrawAmountDialog() {
+    return showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -219,11 +219,14 @@ class _BankAccountDetailsState extends State<BankAccountDetails> {
         });
   }
 
-  _onNewAmountSaved(amount) => addWithdrawAmount = (amount);
+  _onNewAmountSaved(amount) => addWithdrawAmount = double.parse(amount);
 
   addAmount() async {
     if (_amountFormKey.currentState!.validate()) {
       _amountFormKey.currentState!.save();
+      widget.bankAccount.amount! + addWithdrawAmount;
+      await DatabaseHelper.instance
+          .bankAccountDetailsUpdate(widget.bankAccount);
 
     }
     setState(() {
@@ -234,6 +237,7 @@ class _BankAccountDetailsState extends State<BankAccountDetails> {
   withdrawAmount() async {
     if (_amountFormKey.currentState!.validate()) {
       _amountFormKey.currentState!.save();
+
     }
     setState(() {
       _autoValidate = true;

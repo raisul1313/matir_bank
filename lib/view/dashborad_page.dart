@@ -25,13 +25,12 @@ class _DashboardPageState extends State<DashboardPage> {
   late double _pageHeight;
   late double _pageWidth;
   late List<BankAccount> _bankAccountList;
-  late BankAccount _bankAccount;
 
   @override
   void initState() {
-    _bankAccount = BankAccount();
     _bankAccountList = [];
     getBankAccountInfo();
+    setState(() {});
     super.initState();
   }
 
@@ -137,7 +136,7 @@ class _DashboardPageState extends State<DashboardPage> {
         PopupMenuItem(child: const Text('Edit'), value: 1),
         PopupMenuItem(child: const Text('Delete'), value: 2),
       ],
-    ).then((value) {
+    ).then((value) async {
       switch (value) {
         case 1:
           Fluttertoast.showToast(
@@ -147,12 +146,46 @@ class _DashboardPageState extends State<DashboardPage> {
           break;
 
         case 2:
-          Fluttertoast.showToast(
-            msg: "Delete",
-            backgroundColor: Palette.orangeShade,
-          );
+          setState(() {
+            _showBankAccountDeleteAlertDialog(bankAccount);
+          });
           break;
       }
     });
+  }
+
+  _showBankAccountDeleteAlertDialog(BankAccount bankAccount) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, StateSetter setState) {
+            return AlertDialog(
+              title: Text(
+                "Delete Bank Account!",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Palette.orangeShade.shade900),
+              ),
+              content: const Text(
+                  "Are you sure that you want to delete this bank account?"),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('No'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    await DatabaseHelper.instance
+                        .bankAccountDelete(bankAccount.accountID!);
+                    getBankAccountInfo();
+                    setState(() {});
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Yes'),
+                ),
+              ],
+            );
+          });
+        });
   }
 }

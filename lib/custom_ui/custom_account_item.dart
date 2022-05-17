@@ -7,6 +7,7 @@ class ItemAccount extends StatelessWidget {
   final Function itemClick;
   final Function itemLongClick;
 
+
   const ItemAccount(
       {Key? key,
       required this.bankAccount,
