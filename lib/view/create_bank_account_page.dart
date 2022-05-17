@@ -29,8 +29,8 @@ class _CreateBankAccountState extends State<CreateBankAccount> {
   @override
   void initState() {
     _bankAccount = BankAccount();
-    _getUserID();
     _selectAccountType = "Current Account";
+    _getUserID();
     super.initState();
   }
 

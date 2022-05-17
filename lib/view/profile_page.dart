@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:matir_bank/custom_ui/custom_button.dart';
 import 'package:matir_bank/datatbase_helper/database_helper.dart';
 import 'package:matir_bank/model/app_user.dart';
+import 'package:matir_bank/model/bank_account.dart';
 import 'package:matir_bank/utils/values/palette.dart';
 import 'package:matir_bank/view/log_in_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,6 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     _appUser = AppUser();
     getUserInfo();
+    setState(() {});
     super.initState();
   }
 
@@ -232,13 +234,13 @@ class _ProfilePageState extends State<ProfilePage> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text(
-              "Delete Account!",
+              "Delete Account !",
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Palette.orangeShade.shade900),
             ),
             content: const Text(
-                "Are you sure that you want to delete your account?"),
+                "Are you sure that you want to delete your account ?"),
             actions: <Widget>[
               TextButton(
                 onPressed: () => Navigator.pop(context, 'No'),

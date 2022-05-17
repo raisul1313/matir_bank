@@ -31,9 +31,7 @@ class _BankAccountDetailsState extends State<BankAccountDetails> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery
-        .of(context)
-        .size;
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -156,7 +154,7 @@ class _BankAccountDetailsState extends State<BankAccountDetails> {
                   height: size.height * 0.02,
                 ),
                 CustomButton(
-                  buttonName: 'Add/Withdraw Money',
+                  buttonName: 'Add/Withdraw',
                   buttonHeight: 50,
                   backgroundColor: Palette.orangeShade.shade700,
                   onButtonPressed: _showAddWithdrawAmountDialog,
@@ -175,7 +173,7 @@ class _BankAccountDetailsState extends State<BankAccountDetails> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text(
-              "Add/Withdraw Money",
+              "Money Add/Withdraw",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
@@ -189,31 +187,34 @@ class _BankAccountDetailsState extends State<BankAccountDetails> {
                 label: "Amount",
                 hint: "Enter Amount",
                 borderRadius: 5,
-                prefixIcon: Icon(Icons.attach_money),
+                prefixIcon: Icon(Icons.money_rounded),
                 //validator: FormValidator.validateTextForm,
                 onSaved: _onNewAmountSaved,
                 inputType: TextInputType.number,
               ),
             ),
             actions: [
-              SizedBox(
-                width: 100,
-                child: CustomButton(
-                    buttonName: 'Add',
-                    buttonHeight: 50,
-                    backgroundColor: Palette.orangeShade.shade700,
-                    onButtonPressed: addAmount
-                ),
-              ),
-              SizedBox(
-                width: 100,
-                child: CustomButton(
-                    buttonName: 'Withdraw',
-                    buttonHeight: 50,
-                    backgroundColor: Palette.orangeShade.shade700,
-                    onButtonPressed: withdrawAmount
-                ),
-              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  SizedBox(
+                    width: 100,
+                    child: CustomButton(
+                        buttonName: 'Add',
+                        buttonHeight: 50,
+                        backgroundColor: Palette.orangeShade.shade700,
+                        onButtonPressed: _addAmount),
+                  ),
+                  SizedBox(
+                    width: 100,
+                    child: CustomButton(
+                        buttonName: 'Withdraw',
+                        buttonHeight: 50,
+                        backgroundColor: Palette.orangeShade.shade700,
+                        onButtonPressed: _withdrawAmount),
+                  ),
+                ],
+              )
             ],
           );
         });
@@ -221,28 +222,31 @@ class _BankAccountDetailsState extends State<BankAccountDetails> {
 
   _onNewAmountSaved(amount) => addWithdrawAmount = double.parse(amount);
 
-  addAmount() async {
+  _addAmount() async {
     if (_amountFormKey.currentState!.validate()) {
       _amountFormKey.currentState!.save();
-      widget.bankAccount.amount! + addWithdrawAmount;
-      //TO DO
+      widget.bankAccount.amount =
+          (widget.bankAccount.amount! + addWithdrawAmount);
       await DatabaseHelper.instance
           .bankAccountDetailsUpdate(widget.bankAccount);
-
+      Navigator.pop(context);
     }
     setState(() {
       _autoValidate = true;
     });
   }
 
-  withdrawAmount() async {
+  _withdrawAmount() async {
     if (_amountFormKey.currentState!.validate()) {
       _amountFormKey.currentState!.save();
-
+      widget.bankAccount.amount =
+          (widget.bankAccount.amount! - addWithdrawAmount);
+      await DatabaseHelper.instance
+          .bankAccountDetailsUpdate(widget.bankAccount);
+      Navigator.pop(context);
     }
     setState(() {
       _autoValidate = true;
     });
   }
-
 }

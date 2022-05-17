@@ -15,7 +15,7 @@ class ItemAccount extends StatelessWidget {
       required this.itemLongClick})
       : super(key: key);
 
-@override
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Card(
@@ -25,7 +25,7 @@ class ItemAccount extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                bankAccount.bankName.toString(),
+                bankAccount.bankName.toString().toUpperCase(),
                 style: TextStyle(
                     fontSize: 20.0,
                     color: Palette.orangeShade.shade800,
@@ -98,7 +98,7 @@ class ItemAccount extends StatelessWidget {
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),

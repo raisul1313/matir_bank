@@ -156,7 +156,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           prefixIcon: Icon(Icons.phone),
                           //validator: FormValidator.validateTextForm,
                           onSaved: _onPhoneNumberSaved,
-                          inputType: TextInputType.name,
+                          inputType: TextInputType.number,
                           textInputAction: TextInputAction.next,
                         ),
                         SizedBox(
@@ -339,12 +339,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
       lastDate: DateTime(5000),
     ))!;
 
-    if (picked != null && picked != showingDate)
+    if (picked != null && picked != showingDate) {
       setState(() {
         showingDate = picked;
         birthDate = outputFormat.format(showingDate);
         _appUser.birthDate = birthDate;
       });
+    }
   }
 
   _handleRadioValue(value) {

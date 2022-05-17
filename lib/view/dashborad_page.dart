@@ -161,13 +161,13 @@ class _DashboardPageState extends State<DashboardPage> {
           return StatefulBuilder(builder: (context, StateSetter setState) {
             return AlertDialog(
               title: Text(
-                "Delete Bank Account!",
+                "Delete Bank Account !",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Palette.orangeShade.shade900),
               ),
               content: const Text(
-                  "Are you sure that you want to delete this bank account?"),
+                  "Are you sure that you want to delete this bank account ?"),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
@@ -177,8 +177,8 @@ class _DashboardPageState extends State<DashboardPage> {
                   onPressed: () async {
                     await DatabaseHelper.instance
                         .bankAccountDelete(bankAccount.accountID!);
-                    getBankAccountInfo();
                     setState(() {});
+                    getBankAccountInfo();
                     Navigator.pop(context);
                   },
                   child: const Text('Yes'),

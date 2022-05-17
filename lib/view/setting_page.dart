@@ -37,13 +37,13 @@ class _SettingsPageState extends State<SettingsPage> {
                   context: context,
                   builder: (BuildContext context) => AlertDialog(
                     title: Text(
-                      "Log Out",
+                      "Log Out !",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Palette.orangeShade.shade900),
                     ),
                     content:
-                        const Text("Are you sure that you want logout !"),
+                        const Text("Are you sure that you want logout ?"),
                     actions: <Widget>[
                       TextButton(
                         onPressed: () => Navigator.pop(context, 'No'),

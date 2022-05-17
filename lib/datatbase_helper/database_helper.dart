@@ -71,6 +71,7 @@ class DatabaseHelper {
     $amount $doubleType,
     $type $textType,
     FOREIGN KEY ($userID) REFERENCES $tableUsers($userID)
+    ON DELETE CASCADE
     )''');
   }
 
