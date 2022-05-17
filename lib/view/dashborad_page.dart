@@ -108,28 +108,10 @@ class _DashboardPageState extends State<DashboardPage> {
       padding: EdgeInsets.all(5.0),
       scrollDirection: Axis.vertical,
       itemBuilder: (context, index) {
-        return GestureDetector(
-          onLongPress: () {
-            PopupMenuButton(
-              itemBuilder: (BuildContext context) {
-                return [
-                  PopupMenuItem(
-                    value: 'edit',
-                    child: Text('EditP'),
-                  ),
-                  PopupMenuItem(
-                    value: 'delete',
-                    child: Text('DeleteP'),
-                  )
-                ];
-              },
-            );
-          },
-          child: ItemAccount(
-            bankAccount: _bankAccountList[index],
-            itemClick: _onItemClicked,
-            itemLongClick: _onItemLongClicked,
-          ),
+        return ItemAccount(
+          bankAccount: _bankAccountList[index],
+          itemClick: _onItemClicked,
+          itemLongClick: _onItemLongClicked,
         );
       },
     );

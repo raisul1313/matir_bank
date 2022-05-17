@@ -232,13 +232,13 @@ class _ProfilePageState extends State<ProfilePage> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text(
-              "Delete User Account!",
+              "Delete Account!",
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Palette.orangeShade.shade900),
             ),
             content: const Text(
-                "Are you sure that you want to delete your account? "),
+                "Are you sure that you want to delete your account?"),
             actions: <Widget>[
               TextButton(
                 onPressed: () => Navigator.pop(context, 'No'),
