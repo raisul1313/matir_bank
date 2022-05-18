@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:matir_bank/model/app_user.dart';
 import 'package:matir_bank/model/bank_account.dart';
 import 'package:path/path.dart';
@@ -134,7 +136,7 @@ class DatabaseHelper {
     if (res.isNotEmpty) {
       return res.map((json) => BankAccount.fromJson(json)).toList();
     } else {
-      throw Exception('ID: $id was not found');
+      throw Exception('New User And Have No Bank Account');
     }
   }
 
@@ -154,14 +156,12 @@ class DatabaseHelper {
     );
   }
 
-  Future<int> bankAccountDetailsUpdate(BankAccount bankAccount) async {
+  Future<List<Map<String, Object?>>> bankAccountAmountUpdate(
+      double updatedAmount, int id) async {
     final db = await instance.database;
-    return db.update(
-      tableAccounts,
-      bankAccount.toJson(),
-      where: '$accountID = ?',
-      whereArgs: [bankAccount.accountID],
-    );
+    return await db.rawQuery("UPDATE $tableAccounts SET "
+        "$amount = '$updatedAmount' "
+        "WHERE $accountID= '$id'");
   }
 
   Future<int> bankAccountDelete(int id) async {
@@ -171,6 +171,12 @@ class DatabaseHelper {
       where: '$accountID = ?',
       whereArgs: [id],
     );
+  }
+
+  bankAccountsDeleteByUser(int id) async {
+    final db = await instance.database;
+    await db.rawQuery("DELETE FROM $tableAccounts "
+        "WHERE $userID = '$id'");
   }
 
   Future<int> userDelete(int id) async {

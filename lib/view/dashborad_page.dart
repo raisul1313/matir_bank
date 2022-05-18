@@ -26,6 +26,8 @@ class _DashboardPageState extends State<DashboardPage> {
   late double _pageWidth;
   late List<BankAccount> _bankAccountList;
 
+
+
   @override
   void initState() {
     _bankAccountList = [];
@@ -111,6 +113,7 @@ class _DashboardPageState extends State<DashboardPage> {
           bankAccount: _bankAccountList[index],
           itemClick: _onItemClicked,
           itemLongClick: _onItemLongClicked,
+          isVisible: true,
         );
       },
     );
@@ -130,7 +133,7 @@ class _DashboardPageState extends State<DashboardPage> {
   _onItemLongClicked(BankAccount bankAccount) {
     showMenu(
       context: context,
-      position: RelativeRect.fromLTRB(25.0, 25.0, 0.0, 0.0),
+      position: RelativeRect.fromLTRB(25.0, 0.0,25.0, 25.0),
       //position where you want to show the menu on screen
       items: [
         PopupMenuItem(child: const Text('Edit'), value: 1),
@@ -174,7 +177,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   child: const Text('No'),
                 ),
                 TextButton(
-                  onPressed: () async {
+                  onPressed: ()  async {
                     await DatabaseHelper.instance
                         .bankAccountDelete(bankAccount.accountID!);
                     setState(() {});

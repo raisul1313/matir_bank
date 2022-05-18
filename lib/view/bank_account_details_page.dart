@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:matir_bank/custom_ui/custom_button.dart';
@@ -21,12 +19,23 @@ class BankAccountDetails extends StatefulWidget {
 class _BankAccountDetailsState extends State<BankAccountDetails> {
   final _amountFormKey = GlobalKey<FormState>();
   bool _autoValidate = false;
-  late double addWithdrawAmount;
+  late BankAccount _bankAccount;
+  double addWithdrawAmount = 0.0;
+  double updatedAmount = 0.0;
 
   @override
   void initState() {
-    addWithdrawAmount = 0.0;
+    _bankAccount = BankAccount();
+    getBankAccountInfo();
+    setState(() {});
     super.initState();
+  }
+
+  void getBankAccountInfo() async {
+    await DatabaseHelper.instance
+        .getBankAccountData(widget.bankAccount.accountID!)
+        .then((value) => _bankAccount = value);
+    setState(() {});
   }
 
   @override
@@ -102,35 +111,35 @@ class _BankAccountDetailsState extends State<BankAccountDetails> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.bankAccount.bankName.toString(),
+                          _bankAccount.bankName.toString(),
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 15.0,
                               color: Colors.black),
                         ),
                         Text(
-                          widget.bankAccount.type.toString(),
+                          _bankAccount.type.toString(),
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 15.0,
                               color: Colors.black),
                         ),
                         Text(
-                          widget.bankAccount.accountNumber.toString(),
+                          _bankAccount.accountNumber.toString(),
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 15.0,
                               color: Colors.black),
                         ),
                         Text(
-                          widget.bankAccount.branch.toString(),
+                          _bankAccount.branch.toString(),
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 15.0,
                               color: Colors.black),
                         ),
                         Text(
-                          widget.bankAccount.amount.toString(),
+                          _bankAccount.amount.toString(),
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 15.0,
@@ -225,10 +234,11 @@ class _BankAccountDetailsState extends State<BankAccountDetails> {
   _addAmount() async {
     if (_amountFormKey.currentState!.validate()) {
       _amountFormKey.currentState!.save();
-      widget.bankAccount.amount =
-          (widget.bankAccount.amount! + addWithdrawAmount);
+      updatedAmount = _bankAccount.amount! + addWithdrawAmount;
       await DatabaseHelper.instance
-          .bankAccountDetailsUpdate(widget.bankAccount);
+          .bankAccountAmountUpdate(updatedAmount, _bankAccount.accountID!);
+      getBankAccountInfo();
+      setState(() {});
       Navigator.pop(context);
     }
     setState(() {
@@ -239,10 +249,11 @@ class _BankAccountDetailsState extends State<BankAccountDetails> {
   _withdrawAmount() async {
     if (_amountFormKey.currentState!.validate()) {
       _amountFormKey.currentState!.save();
-      widget.bankAccount.amount =
-          (widget.bankAccount.amount! - addWithdrawAmount);
-      await DatabaseHelper.instance
-          .bankAccountDetailsUpdate(widget.bankAccount);
+      updatedAmount = _bankAccount.amount! - addWithdrawAmount;
+      await DatabaseHelper.instance.bankAccountAmountUpdate(
+          updatedAmount, _bankAccount.accountID!);
+      getBankAccountInfo();
+      setState(() {});
       Navigator.pop(context);
     }
     setState(() {

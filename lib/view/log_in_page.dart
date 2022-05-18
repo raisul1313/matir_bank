@@ -166,7 +166,7 @@ class _LogInPageState extends State<LogInPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => RegistrationPage()),
+                                      builder: (context) => RegistrationPage(isUpdate: false,)),
                                 );
                                 Fluttertoast.showToast(
                                   msg: "Registration page",

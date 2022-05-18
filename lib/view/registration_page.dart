@@ -8,10 +8,18 @@ import 'package:matir_bank/datatbase_helper/database_helper.dart';
 import 'package:matir_bank/model/app_user.dart';
 import 'package:matir_bank/utils/page_utils.dart';
 import 'package:matir_bank/utils/values/palette.dart';
+import 'package:matir_bank/view/bank_account_details_page.dart';
+import 'package:matir_bank/view/dashborad_page.dart';
+import 'package:matir_bank/view/landing_page.dart';
 import 'package:matir_bank/view/log_in_page.dart';
+import 'package:matir_bank/view/profile_page.dart';
 
 class RegistrationPage extends StatefulWidget {
-  const RegistrationPage({Key? key}) : super(key: key);
+  final AppUser? existingUser;
+  final bool isUpdate;
+
+  const RegistrationPage({Key? key, this.existingUser, required this.isUpdate})
+      : super(key: key);
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
@@ -28,15 +36,32 @@ class _RegistrationPageState extends State<RegistrationPage> {
   DateTime showingDate = DateTime.now();
   var outputFormat = DateFormat('dd/MM/yyyy');
   int _radioGroupValue = 1;
-  String _selectedGender = "";
+  String _selectedGender = "Male";
 
   @override
   void initState() {
     super.initState();
-    _appUser = AppUser();
-    birthDate = outputFormat.format(showingDate);
+    _appUser = widget.isUpdate ? widget.existingUser! : AppUser();
+
+    if (widget.isUpdate){
+      switch(widget.existingUser!.gender){
+        case 'Male':
+          _radioGroupValue = 1;
+          break;
+        case 'Female':
+          _radioGroupValue = 2;
+          break;
+        case 'Other' :
+          _radioGroupValue = 3;
+      }
+
+    }
+
+    birthDate = (widget.isUpdate
+        ? widget.existingUser!.birthDate
+        : outputFormat.format(showingDate))!;
     _appUser.birthDate = birthDate;
-    _selectedGender = "Male";
+   _selectedGender = (widget.isUpdate ? widget.existingUser!.gender : "Male")!;
   }
 
   @override
@@ -77,6 +102,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     child: Column(
                       children: [
                         CustomTextFormField(
+                          initialText: widget.isUpdate
+                              ? widget.existingUser!.userName
+                              : '',
                           label: "User Name",
                           hint: "Enter User Name",
                           borderRadius: 5,
@@ -92,6 +120,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           height: 20.0,
                         ),
                         CustomTextFormField(
+                          initialText: widget.isUpdate
+                              ? widget.existingUser!.fullName
+                              : '',
                           label: "Full Name",
                           hint: "Enter Full Name",
                           borderRadius: 5,
@@ -107,6 +138,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           height: 20.0,
                         ),
                         CustomTextFormField(
+                          initialText: widget.isUpdate
+                              ? widget.existingUser!.fatherName
+                              : '',
                           label: "Father's Name",
                           hint: "Enter Father's Name",
                           borderRadius: 5,
@@ -122,6 +156,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           height: 20.0,
                         ),
                         CustomTextFormField(
+                          initialText: widget.isUpdate
+                              ? widget.existingUser!.motherName
+                              : '',
                           label: "Mother's Name",
                           hint: "Enter Mother's Name",
                           borderRadius: 5,
@@ -137,6 +174,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           height: 20.0,
                         ),
                         CustomTextFormField(
+                          initialText: widget.isUpdate
+                              ? widget.existingUser!.address
+                              : '',
                           label: "Address",
                           hint: "Enter Address",
                           borderRadius: 5,
@@ -150,6 +190,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           height: 20.0,
                         ),
                         CustomTextFormField(
+                          initialText: widget.isUpdate
+                              ? widget.existingUser!.phoneNumber
+                              : '',
                           label: "Phone Number",
                           hint: "Enter Phone Number",
                           borderRadius: 5,
@@ -199,7 +242,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         SizedBox(
                           height: _pageHeight * 0.02,
                         ),
-
                         Row(
                           children: [
                             Text(
@@ -242,6 +284,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           height: 20.0,
                         ),
                         CustomTextFormField(
+                          initialText: widget.isUpdate
+                              ? widget.existingUser!.password
+                              : '',
                           label: "Password",
                           hint: "Enter Password",
                           borderRadius: 5,
@@ -255,25 +300,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         SizedBox(
                           height: 20.0,
                         ),
-                        /*CustomTextFormField(
-                          label: "Confirm Password",
-                          hint: "Re-type Password",
-                          borderRadius: 5,
-                          prefixIcon: Icon(Icons.password),
-                          //validator: FormValidator.validateTextForm,
-                          //onSaved: _onPassSaved,
-                          inputType: TextInputType.name,
-                          isPasswordField: true,
-                          textInputAction: TextInputAction.next,
-                        ),
-                        SizedBox(
-                          height: _pageHeight * 0.03,
-                        ),*/
                         SizedBox(
                           width: 150,
                           child: CustomButton(
                             buttonHeight: 50,
-                            buttonName: 'Register',
+                            buttonName: 'Save',
                             backgroundColor: Palette.orangeShade.shade700,
                             onButtonPressed: signUp,
                           ),
@@ -302,29 +333,33 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   _onPhoneNumberSaved(phoneNumber) => _appUser.phoneNumber = phoneNumber;
 
-  //_onGenderSaved(gender) => _appUser.gender = gender;
-
   _onNewPassSaved(newPassword) => _appUser.password = newPassword;
 
   signUp() async {
     if (_registrationFormKey.currentState!.validate()) {
       _registrationFormKey.currentState!.save();
       _appUser.gender = _selectedGender;
-      await DatabaseHelper.instance.register(_appUser).then((value) {
-        if (value) {
-          Fluttertoast.showToast(
-            msg: "Successfully Saved",
-            backgroundColor: Palette.orangeShade,
-          );
-        } else {
-          Fluttertoast.showToast(
-            msg: "Not Successful !!!",
-            backgroundColor: Palette.orangeShade,
-          );
-        }
+      if (widget.isUpdate) {
+        await DatabaseHelper.instance.userDetailsUpdate(_appUser);
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LogInPage()));
-      });
+            context, MaterialPageRoute(builder: (_) => LandingPage()));
+      } else {
+        await DatabaseHelper.instance.register(_appUser).then((value) {
+          if (value) {
+            Fluttertoast.showToast(
+              msg: "Successfully Saved",
+              backgroundColor: Palette.orangeShade,
+            );
+          } else {
+            Fluttertoast.showToast(
+              msg: "Not Successful !!!",
+              backgroundColor: Palette.orangeShade,
+            );
+          }
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => LogInPage()));
+        });
+      }
     }
     setState(() {
       _autoValidate = true;
@@ -368,9 +403,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
           _radioGroupValue = value;
           _selectedGender = "Other";
         });
-        break;
-      default:
-        _selectedGender = "Male";
         break;
     }
   }

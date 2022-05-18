@@ -3,9 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:matir_bank/custom_ui/custom_button.dart';
 import 'package:matir_bank/datatbase_helper/database_helper.dart';
 import 'package:matir_bank/model/app_user.dart';
-import 'package:matir_bank/model/bank_account.dart';
 import 'package:matir_bank/utils/values/palette.dart';
 import 'package:matir_bank/view/log_in_page.dart';
+import 'package:matir_bank/view/registration_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -201,7 +201,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         buttonName: 'Edit',
                         buttonHeight: 50,
                         backgroundColor: Palette.orangeShade.shade700,
-                        onButtonPressed: () => null,
+                        onButtonPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => RegistrationPage(isUpdate: true, existingUser: _appUser,),
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -257,6 +262,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   _userDelete() async {
     await DatabaseHelper.instance.userDelete(_appUser.userID!);
+    await DatabaseHelper.instance.bankAccountsDeleteByUser(_appUser.userID!);
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => LogInPage()),
         (Route<dynamic> route) => false);

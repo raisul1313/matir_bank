@@ -6,13 +6,14 @@ class ItemAccount extends StatelessWidget {
   final BankAccount bankAccount;
   final Function itemClick;
   final Function itemLongClick;
+  final bool isVisible;
 
 
   const ItemAccount(
       {Key? key,
       required this.bankAccount,
       required this.itemClick,
-      required this.itemLongClick})
+      required this.itemLongClick, required this.isVisible})
       : super(key: key);
 
   @override
@@ -99,6 +100,21 @@ class ItemAccount extends StatelessWidget {
                   ],
                 ),
               ),
+              Visibility(
+                visible: isVisible,
+                child: PopupMenuButton(
+                    itemBuilder:(context) => [
+                      PopupMenuItem(
+                        child: Text("First"),
+                        value: 1,
+                      ),
+                      PopupMenuItem(
+                        child: Text("Second"),
+                        value: 2,
+                      )
+                    ]
+                ),
+              )
             ],
           ),
         ),
