@@ -42,26 +42,23 @@ class _RegistrationPageState extends State<RegistrationPage> {
   void initState() {
     super.initState();
     _appUser = widget.isUpdate ? widget.existingUser! : AppUser();
-
-    if (widget.isUpdate){
-      switch(widget.existingUser!.gender){
+    if (widget.isUpdate) {
+      switch (widget.existingUser!.gender) {
         case 'Male':
           _radioGroupValue = 1;
           break;
         case 'Female':
           _radioGroupValue = 2;
           break;
-        case 'Other' :
+        case 'Other':
           _radioGroupValue = 3;
       }
-
     }
-
     birthDate = (widget.isUpdate
         ? widget.existingUser!.birthDate
         : outputFormat.format(showingDate))!;
     _appUser.birthDate = birthDate;
-   _selectedGender = (widget.isUpdate ? widget.existingUser!.gender : "Male")!;
+    _selectedGender = (widget.isUpdate ? widget.existingUser!.gender : "Male")!;
   }
 
   @override
@@ -341,8 +338,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
       _appUser.gender = _selectedGender;
       if (widget.isUpdate) {
         await DatabaseHelper.instance.userDetailsUpdate(_appUser);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (_) => LandingPage()));
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (_) => LandingPage(),
+            ),
+                (Route<dynamic> route) => false);
       } else {
         await DatabaseHelper.instance.register(_appUser).then((value) {
           if (value) {
@@ -356,8 +357,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
               backgroundColor: Palette.orangeShade,
             );
           }
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => LogInPage()));
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (_) => LogInPage(),
+              ),
+                  (Route<dynamic> route) => false);
         });
       }
     }
