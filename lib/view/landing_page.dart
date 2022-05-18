@@ -22,7 +22,6 @@ class _LandingPageState extends State<LandingPage> {
     const SettingsPage(),
   ];
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,12 +49,12 @@ class _LandingPageState extends State<LandingPage> {
             icon: pageIndex == 0
                 ? const Icon(
                     Icons.widgets_rounded,
-                    color: Colors.white,
+              color: Colors.black,
                     size: 30,
                   )
                 : const Icon(
                     Icons.widgets_outlined,
-                    color: Colors.white,
+              color: Colors.black,
                     size: 30,
                   ),
           ),
@@ -69,12 +68,12 @@ class _LandingPageState extends State<LandingPage> {
             icon: pageIndex == 1
                 ? const Icon(
                     Icons.person,
-                    color: Colors.white,
+              color: Colors.black,
                     size: 30,
                   )
                 : const Icon(
                     Icons.person_outline,
-                    color: Colors.white,
+              color: Colors.black,
                     size: 30,
                   ),
           ),
@@ -88,12 +87,12 @@ class _LandingPageState extends State<LandingPage> {
             icon: pageIndex == 2
                 ? const Icon(
                     Icons.workspaces_filled,
-                    color: Colors.white,
+                    color: Colors.black,
                     size: 30,
                   )
                 : const Icon(
                     Icons.workspaces_outline,
-                    color: Colors.white,
+                    color: Colors.black,
                     size: 30,
                   ),
           ),

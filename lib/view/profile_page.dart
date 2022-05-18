@@ -5,7 +5,7 @@ import 'package:matir_bank/datatbase_helper/database_helper.dart';
 import 'package:matir_bank/model/app_user.dart';
 import 'package:matir_bank/utils/values/palette.dart';
 import 'package:matir_bank/view/log_in_page.dart';
-import 'package:matir_bank/view/registration_page.dart';
+import 'package:matir_bank/view/registration_update_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -204,7 +204,10 @@ class _ProfilePageState extends State<ProfilePage> {
                         onButtonPressed: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => RegistrationPage(isUpdate: true, existingUser: _appUser,),
+                            builder: (_) => RegistrationUpdatePage(
+                              isUpdate: true,
+                              existingUser: _appUser,
+                            ),
                           ),
                         ),
                       ),
@@ -233,8 +236,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Future<void> showDeleteUserDialog() async {
-    return await showDialog(
+  Future<void> showDeleteUserDialog() {
+    return showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -263,8 +266,27 @@ class _ProfilePageState extends State<ProfilePage> {
   _userDelete() async {
     await DatabaseHelper.instance.userDelete(_appUser.userID!);
     await DatabaseHelper.instance.bankAccountsDeleteByUser(_appUser.userID!);
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => LogInPage()),
-        (Route<dynamic> route) => false);
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "Your account is deleted.",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Palette.orangeShade.shade900),
+            ),
+            content: const Text(
+                "Please Log In First"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => LogInPage()),
+                        (Route<dynamic> route) => false),
+                child: const Text('Ok'),
+              ),
+            ],
+          );
+        });
   }
 }

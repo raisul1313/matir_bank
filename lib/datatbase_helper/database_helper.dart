@@ -156,6 +156,16 @@ class DatabaseHelper {
     );
   }
 
+  Future<int> bankAccountDetailsUpdate(BankAccount bankAccount) async {
+    final db = await instance.database;
+    return db.update(
+      tableAccounts,
+      bankAccount.toJson(),
+      where: '$accountID = ?',
+      whereArgs: [bankAccount.accountID],
+    );
+  }
+
   Future<List<Map<String, Object?>>> bankAccountAmountUpdate(
       double updatedAmount, int id) async {
     final db = await instance.database;

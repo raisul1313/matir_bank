@@ -8,24 +8,22 @@ import 'package:matir_bank/datatbase_helper/database_helper.dart';
 import 'package:matir_bank/model/app_user.dart';
 import 'package:matir_bank/utils/page_utils.dart';
 import 'package:matir_bank/utils/values/palette.dart';
-import 'package:matir_bank/view/bank_account_details_page.dart';
-import 'package:matir_bank/view/dashborad_page.dart';
 import 'package:matir_bank/view/landing_page.dart';
 import 'package:matir_bank/view/log_in_page.dart';
-import 'package:matir_bank/view/profile_page.dart';
 
-class RegistrationPage extends StatefulWidget {
+
+class RegistrationUpdatePage extends StatefulWidget {
   final AppUser? existingUser;
   final bool isUpdate;
 
-  const RegistrationPage({Key? key, this.existingUser, required this.isUpdate})
+  const RegistrationUpdatePage({Key? key, this.existingUser, required this.isUpdate})
       : super(key: key);
 
   @override
-  State<RegistrationPage> createState() => _RegistrationPageState();
+  State<RegistrationUpdatePage> createState() => _RegistrationUpdatePageState();
 }
 
-class _RegistrationPageState extends State<RegistrationPage> {
+class _RegistrationUpdatePageState extends State<RegistrationUpdatePage> {
   final _registrationFormKey = GlobalKey<FormState>();
   bool _autoValidate = false;
   late double _pageHeight;
@@ -301,9 +299,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           width: 150,
                           child: CustomButton(
                             buttonHeight: 50,
-                            buttonName: 'Save',
+                            buttonName: 'Submit',
                             backgroundColor: Palette.orangeShade.shade700,
-                            onButtonPressed: signUp,
+                            onButtonPressed: upDateSignUp,
                           ),
                         ),
                       ],
@@ -332,7 +330,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   _onNewPassSaved(newPassword) => _appUser.password = newPassword;
 
-  signUp() async {
+  upDateSignUp() async {
     if (_registrationFormKey.currentState!.validate()) {
       _registrationFormKey.currentState!.save();
       _appUser.gender = _selectedGender;
@@ -357,12 +355,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
               backgroundColor: Palette.orangeShade,
             );
           }
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (_) => LogInPage(),
-              ),
-                  (Route<dynamic> route) => false);
+          Navigator.pop(context);
         });
       }
     }

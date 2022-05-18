@@ -10,7 +10,7 @@ import 'package:matir_bank/model/app_user.dart';
 import 'package:matir_bank/utils/page_utils.dart';
 import 'package:matir_bank/utils/values/palette.dart';
 import 'package:matir_bank/view/landing_page.dart';
-import 'package:matir_bank/view/registration_page.dart';
+import 'package:matir_bank/view/registration_update_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LogInPage extends StatefulWidget {
@@ -166,7 +166,11 @@ class _LogInPageState extends State<LogInPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => RegistrationPage(isUpdate: false,)),
+                                    builder: (context) =>
+                                        RegistrationUpdatePage(
+                                      isUpdate: false,
+                                    ),
+                                  ),
                                 );
                                 Fluttertoast.showToast(
                                   msg: "Registration page",

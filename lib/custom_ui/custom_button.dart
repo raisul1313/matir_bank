@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomButton extends StatelessWidget {
   final Function onButtonPressed;
@@ -43,19 +44,20 @@ class CustomButton extends StatelessWidget {
       style: ButtonStyle(
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(6.0),
+            borderRadius: BorderRadius.circular(20.0),
           ),
         ),
         backgroundColor: MaterialStateProperty.all(backgroundColor),
         textStyle: MaterialStateProperty.all(
           TextStyle(
             color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),
       onPressed: isEnable ? () => onButtonPressed() : null,
       child:
-          Text(buttonName!, style: TextStyle(fontSize: 16, color: textColor)),
+          Text(buttonName!, style: TextStyle(fontSize: 15, color: textColor)),
     );
   }
 }

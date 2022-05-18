@@ -10,7 +10,7 @@ import 'package:matir_bank/model/bank_account.dart';
 import 'package:matir_bank/utils/page_utils.dart';
 import 'package:matir_bank/utils/values/palette.dart';
 import 'package:matir_bank/view/bank_account_details_page.dart';
-import 'package:matir_bank/view/create_bank_account_page.dart';
+import 'package:matir_bank/view/create_update_bank_account_page.dart';
 import 'package:matir_bank/view/profile_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,17 +26,15 @@ class _DashboardPageState extends State<DashboardPage> {
   late double _pageWidth;
   late List<BankAccount> _bankAccountList;
 
-
-
   @override
   void initState() {
     _bankAccountList = [];
-    getBankAccountInfo();
+    getListBankAccountInfo();
     setState(() {});
     super.initState();
   }
 
-  void getBankAccountInfo() async {
+  void getListBankAccountInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await DatabaseHelper.instance
         .getListBankAccountData(prefs.getInt('id')!)
@@ -61,19 +59,27 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Palette.orangeShade.shade700,
-        child: Icon(Icons.add),
+        child: Icon(
+          Icons.add,
+          color: Colors.black,
+        ),
         onPressed: () {
           showModalBottomSheet(
-              //enableDrag: false,
-              //isDismissible: false,
-              isScrollControlled: true,
-              context: context,
-              shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(10))),
-              builder: (context) => CreateBankAccount());
+            //enableDrag: false,
+            //isDismissible: false,
+            isScrollControlled: true,
+            context: context,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(10),
+              ),
+            ),
+            builder: (context) => CreateUpdateBankAccount(
+              isUpdate: false,
+            ),
+          );
           Fluttertoast.showToast(
-              msg: "Create new bank account",
+              msg: "Welcome to create new bank account",
               backgroundColor: Palette.orangeShade);
         },
       ),
@@ -90,9 +96,10 @@ class _DashboardPageState extends State<DashboardPage> {
               )
             : Center(
                 child: Text(
-                  "No Account Found !",
+                  "No Bank Account Found !",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
+                    fontSize: 20.0,
                     color: Palette.orangeShade.shade900,
                   ),
                 ),
@@ -113,7 +120,7 @@ class _DashboardPageState extends State<DashboardPage> {
           bankAccount: _bankAccountList[index],
           itemClick: _onItemClicked,
           itemLongClick: _onItemLongClicked,
-          isVisible: true,
+          isVisible: false,
         );
       },
     );
@@ -133,7 +140,7 @@ class _DashboardPageState extends State<DashboardPage> {
   _onItemLongClicked(BankAccount bankAccount) {
     showMenu(
       context: context,
-      position: RelativeRect.fromLTRB(25.0, 0.0,25.0, 25.0),
+      position: RelativeRect.fromLTRB(25.0, 0.0, 25.0, 25.0),
       //position where you want to show the menu on screen
       items: [
         PopupMenuItem(child: const Text('Edit'), value: 1),
@@ -142,10 +149,13 @@ class _DashboardPageState extends State<DashboardPage> {
     ).then((value) async {
       switch (value) {
         case 1:
-          Fluttertoast.showToast(
-            msg: "Edit",
-            backgroundColor: Palette.orangeShade,
-          );
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CreateUpdateBankAccount(
+                        isUpdate: true,
+                        existBankAccount: bankAccount,
+                      )));
           break;
 
         case 2:
@@ -177,11 +187,11 @@ class _DashboardPageState extends State<DashboardPage> {
                   child: const Text('No'),
                 ),
                 TextButton(
-                  onPressed: ()  async {
+                  onPressed: () async {
                     await DatabaseHelper.instance
                         .bankAccountDelete(bankAccount.accountID!);
                     setState(() {});
-                    getBankAccountInfo();
+                    getListBankAccountInfo();
                     Navigator.pop(context);
                   },
                   child: const Text('Yes'),

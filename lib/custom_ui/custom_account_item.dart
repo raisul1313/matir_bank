@@ -8,12 +8,12 @@ class ItemAccount extends StatelessWidget {
   final Function itemLongClick;
   final bool isVisible;
 
-
   const ItemAccount(
       {Key? key,
       required this.bankAccount,
       required this.itemClick,
-      required this.itemLongClick, required this.isVisible})
+      required this.itemLongClick,
+      required this.isVisible})
       : super(key: key);
 
   @override
@@ -25,12 +25,44 @@ class ItemAccount extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              Text(
-                bankAccount.bankName.toString().toUpperCase(),
-                style: TextStyle(
-                    fontSize: 20.0,
-                    color: Palette.orangeShade.shade800,
-                    fontWeight: FontWeight.bold),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 12,
+                    child: Text(
+                      bankAccount.bankName.toString().toUpperCase(),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: TextStyle(
+                          fontSize: 20.0,
+                          color: Palette.orangeShade.shade800,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      height: 25.0,
+                      width: 25.0,
+                      child: PopupMenuButton(
+                          icon: Visibility(
+                            visible: isVisible,
+                            child: Icon(Icons.more_horiz),
+                          ),
+                          itemBuilder: (context) => [
+                                PopupMenuItem(
+                                  child: Text("First"),
+                                  value: 1,
+                                ),
+                                PopupMenuItem(
+                                  child: Text("Second"),
+                                  value: 2,
+                                )
+                              ]),
+                    ),
+                  )
+                ],
               ),
               Divider(
                 thickness: 3.0,
@@ -100,21 +132,6 @@ class ItemAccount extends StatelessWidget {
                   ],
                 ),
               ),
-              Visibility(
-                visible: isVisible,
-                child: PopupMenuButton(
-                    itemBuilder:(context) => [
-                      PopupMenuItem(
-                        child: Text("First"),
-                        value: 1,
-                      ),
-                      PopupMenuItem(
-                        child: Text("Second"),
-                        value: 2,
-                      )
-                    ]
-                ),
-              )
             ],
           ),
         ),

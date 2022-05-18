@@ -52,8 +52,6 @@ class _BankAccountDetailsState extends State<BankAccountDetails> {
       ),
       body: SafeArea(
         child: Container(
-          height: size.height,
-          width: size.width,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -61,90 +59,94 @@ class _BankAccountDetailsState extends State<BankAccountDetails> {
                 SizedBox(
                   height: size.height * 0.02,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Column(
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          "Bank Name:",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15.0,
-                              color: Palette.orangeShade),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Bank Name:",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15.0,
+                                  color: Palette.orangeShade),
+                            ),
+                            Text(
+                              "Account Type:",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15.0,
+                                  color: Palette.orangeShade),
+                            ),
+                            Text(
+                              "Account Number:",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15.0,
+                                  color: Palette.orangeShade),
+                            ),
+                            Text(
+                              "Branch Name:",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15.0,
+                                  color: Palette.orangeShade),
+                            ),
+                            Text(
+                              "Total Amount:",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15.0,
+                                  color: Palette.orangeShade),
+                            ),
+                          ],
                         ),
-                        Text(
-                          "Account Type:",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15.0,
-                              color: Palette.orangeShade),
+                        SizedBox(
+                          width: 15.0,
                         ),
-                        Text(
-                          "Account Number:",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15.0,
-                              color: Palette.orangeShade),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _bankAccount.bankName.toString(),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15.0,
+                                  color: Colors.black),
+                            ),
+                            Text(
+                              _bankAccount.type.toString(),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15.0,
+                                  color: Colors.black),
+                            ),
+                            Text(
+                              _bankAccount.accountNumber.toString(),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15.0,
+                                  color: Colors.black),
+                            ),
+                            Text(
+                              _bankAccount.branch.toString(),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15.0,
+                                  color: Colors.black),
+                            ),
+                            Text(
+                              _bankAccount.amount.toString(),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15.0,
+                                  color: Colors.black),
+                            )
+                          ],
                         ),
-                        Text(
-                          "Branch Name:",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15.0,
-                              color: Palette.orangeShade),
-                        ),
-                        Text(
-                          "Total Amount:",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15.0,
-                              color: Palette.orangeShade),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 15.0,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _bankAccount.bankName.toString(),
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15.0,
-                              color: Colors.black),
-                        ),
-                        Text(
-                          _bankAccount.type.toString(),
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15.0,
-                              color: Colors.black),
-                        ),
-                        Text(
-                          _bankAccount.accountNumber.toString(),
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15.0,
-                              color: Colors.black),
-                        ),
-                        Text(
-                          _bankAccount.branch.toString(),
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15.0,
-                              color: Colors.black),
-                        ),
-                        Text(
-                          _bankAccount.amount.toString(),
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15.0,
-                              color: Colors.black),
-                        )
                       ],
                     ),
                   ],
@@ -157,6 +159,7 @@ class _BankAccountDetailsState extends State<BankAccountDetails> {
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontStyle: FontStyle.italic,
+                      fontSize: 18.0,
                       color: Colors.grey),
                 ),
                 SizedBox(

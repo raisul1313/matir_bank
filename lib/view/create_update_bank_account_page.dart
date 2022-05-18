@@ -9,27 +9,46 @@ import 'package:matir_bank/utils/values/palette.dart';
 import 'package:matir_bank/view/landing_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class CreateBankAccount extends StatefulWidget {
-  const CreateBankAccount({Key? key}) : super(key: key);
+class CreateUpdateBankAccount extends StatefulWidget {
+  final BankAccount? existBankAccount;
+  final bool isUpdate;
+
+  const CreateUpdateBankAccount(
+      {Key? key, this.existBankAccount, required this.isUpdate})
+      : super(key: key);
 
   @override
-  State<CreateBankAccount> createState() => _CreateBankAccountState();
+  State<CreateUpdateBankAccount> createState() => _CreateUpdateBankAccountState();
 }
 
-class _CreateBankAccountState extends State<CreateBankAccount> {
+class _CreateUpdateBankAccountState extends State<CreateUpdateBankAccount> {
   final _createBankAccountFormKey = GlobalKey<FormState>();
   bool _autoValidate = false;
   late double _pageHeight;
   late double _pageWidth;
   late BankAccount _bankAccount;
   late int id;
-  late String _selectAccountType;
+  late String _selectAccountType = "Current Account";
   int _radioGroupValue = 1;
 
   @override
   void initState() {
-    _bankAccount = BankAccount();
-    _selectAccountType = "Current Account";
+    _bankAccount = (widget.isUpdate ? widget.existBankAccount : BankAccount())!;
+    if (widget.isUpdate) {
+      switch (widget.existBankAccount!.type) {
+        case 'Current Account':
+          _radioGroupValue = 1;
+          break;
+        case 'Saving Account':
+          _radioGroupValue = 2;
+          break;
+        case 'Fixed Deposit Account':
+          _radioGroupValue = 3;
+          break;
+      }
+    }
+    _selectAccountType =
+        (widget.isUpdate ? widget.existBankAccount!.type : "Current Account")!;
     _getUserID();
     super.initState();
   }
@@ -44,7 +63,17 @@ class _CreateBankAccountState extends State<CreateBankAccount> {
   Widget build(BuildContext context) {
     _pageHeight = MediaQuery.of(context).size.height;
     _pageWidth = PageUtils.getPageWidth(context);
-    return buildBottomSheet();
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: buildBottomSheet(),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget buildBottomSheet() {
@@ -86,6 +115,9 @@ class _CreateBankAccountState extends State<CreateBankAccount> {
                   child: Column(
                     children: [
                       CustomTextFormField(
+                        initialText: widget.isUpdate
+                            ? widget.existBankAccount!.bankName
+                            : '',
                         label: "Bank Name",
                         hint: "Enter Bank Name",
                         borderRadius: 5,
@@ -99,6 +131,9 @@ class _CreateBankAccountState extends State<CreateBankAccount> {
                         height: _pageHeight * 0.02,
                       ),
                       CustomTextFormField(
+                        initialText: widget.isUpdate
+                            ? widget.existBankAccount!.accountNumber
+                            : '',
                         label: "Account No.",
                         hint: "Enter Account No.",
                         borderRadius: 5,
@@ -112,6 +147,9 @@ class _CreateBankAccountState extends State<CreateBankAccount> {
                         height: _pageHeight * 0.02,
                       ),
                       CustomTextFormField(
+                        initialText: widget.isUpdate
+                            ? widget.existBankAccount!.branch
+                            : '',
                         label: "Branch Name",
                         hint: "Enter Branch Name",
                         borderRadius: 5,
@@ -125,6 +163,9 @@ class _CreateBankAccountState extends State<CreateBankAccount> {
                         height: _pageHeight * 0.02,
                       ),
                       CustomTextFormField(
+                        initialText: widget.isUpdate
+                            ? widget.existBankAccount!.amount.toString()
+                            : '',
                         label: "Initial Amount",
                         hint: "Enter Initial Amount",
                         borderRadius: 5,
@@ -206,33 +247,42 @@ class _CreateBankAccountState extends State<CreateBankAccount> {
 
   _onBranchNameSaved(branchName) => _bankAccount.branch = branchName;
 
-  _onInitialAmountSaved(initialAmount) =>_bankAccount.amount = double.parse(initialAmount);
+  _onInitialAmountSaved(initialAmount) =>
+      _bankAccount.amount = double.parse(initialAmount);
 
   createAccount() async {
     if (_createBankAccountFormKey.currentState!.validate()) {
       _createBankAccountFormKey.currentState!.save();
       _bankAccount.type = _selectAccountType;
-      await DatabaseHelper.instance
-          .createNewBankAccount(_bankAccount)
-          .then((value) {
-        if (value) {
-          Fluttertoast.showToast(
-            msg: "New Account Saved",
-            backgroundColor: Palette.orangeShade,
-          );
-        } else {
-          Fluttertoast.showToast(
-            msg: "Not Successful !!!",
-            backgroundColor: Palette.orangeShade,
-          );
-        }
+      if (widget.isUpdate) {
+        await DatabaseHelper.instance.bankAccountDetailsUpdate(_bankAccount);
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(
-              builder: (_) => LandingPage(),
-            ),
-                (Route<dynamic> route) => false);
-      });
+            MaterialPageRoute(builder: (_) => LandingPage()),
+            (Route<dynamic> route) => false);
+      } else {
+        await DatabaseHelper.instance
+            .createNewBankAccount(_bankAccount)
+            .then((value) {
+          if (value) {
+            Fluttertoast.showToast(
+              msg: "New Account Saved",
+              backgroundColor: Palette.orangeShade,
+            );
+          } else {
+            Fluttertoast.showToast(
+              msg: "Not Successful !!!",
+              backgroundColor: Palette.orangeShade,
+            );
+          }
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (_) => LandingPage(),
+              ),
+              (Route<dynamic> route) => false);
+        });
+      }
     }
     setState(() {
       _autoValidate = true;
