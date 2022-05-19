@@ -26,11 +26,13 @@ class _DashboardPageState extends State<DashboardPage> {
   late double _pageWidth;
   late List<BankAccount> _bankAccountList;
 
+  int? tapped;
+  final bool _isShow = false;
+
   @override
   void initState() {
     _bankAccountList = [];
     getListBankAccountInfo();
-    setState(() {});
     super.initState();
   }
 
@@ -40,14 +42,15 @@ class _DashboardPageState extends State<DashboardPage> {
         .getListBankAccountData(prefs.getInt('id')!)
         .then((value) {
       _bankAccountList = value;
-      setState(() {});
     });
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     _pageHeight = MediaQuery.of(context).size.height;
     _pageWidth = PageUtils.getPageWidth(context);
+    getListBankAccountInfo();
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -64,18 +67,13 @@ class _DashboardPageState extends State<DashboardPage> {
           color: Colors.black,
         ),
         onPressed: () {
-          showModalBottomSheet(
-            //enableDrag: false,
-            //isDismissible: false,
-            isScrollControlled: true,
-            context: context,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(10),
-              ),
-            ),
-            builder: (context) => CreateUpdateBankAccount(
-              isUpdate: false,
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  CreateUpdateBankAccount(
+                    isUpdate: false,
+                  ),
             ),
           );
           Fluttertoast.showToast(
@@ -119,11 +117,63 @@ class _DashboardPageState extends State<DashboardPage> {
         return ItemAccount(
           bankAccount: _bankAccountList[index],
           itemClick: _onItemClicked,
-          itemLongClick: _onItemLongClicked,
-          isVisible: false,
+          isEnabled:
+              _bankAccountList[index].accountID == tapped ? _isShow : false,
+          itemEdit: _onItemEdit,
+          itemDelete: _onItemDelete,
         );
       },
     );
+  }
+
+  _onItemDelete(BankAccount bankAccount) {
+    Future.delayed(Duration.zero, () async {
+      await showDialog(
+          context: context,
+          builder: (context) {
+            return StatefulBuilder(builder: (context, StateSetter setState) {
+              return AlertDialog(
+                title: Text(
+                  "Delete Bank Account !",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Palette.orangeShade.shade900),
+                ),
+                content: const Text(
+                    "Are you sure that you want to delete this bank account ?"),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('No'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      await DatabaseHelper.instance
+                          .bankAccountDelete(bankAccount.accountID!);
+                      setState(() {
+                        getListBankAccountInfo();
+                      });
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Yes'),
+                  ),
+                ],
+              );
+            });
+          });
+    });
+  }
+
+  _onItemEdit(BankAccount bankAccount) {
+    Future.delayed(Duration.zero, () async {
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => CreateUpdateBankAccount(
+                    isUpdate: true,
+                    existBankAccount: bankAccount,
+                  )));
+    });
   }
 
   _onItemClicked(BankAccount bankAccount) {
@@ -137,68 +187,4 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  _onItemLongClicked(BankAccount bankAccount) {
-    showMenu(
-      context: context,
-      position: RelativeRect.fromLTRB(25.0, 0.0, 25.0, 25.0),
-      //position where you want to show the menu on screen
-      items: [
-        PopupMenuItem(child: const Text('Edit'), value: 1),
-        PopupMenuItem(child: const Text('Delete'), value: 2),
-      ],
-    ).then((value) async {
-      switch (value) {
-        case 1:
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => CreateUpdateBankAccount(
-                        isUpdate: true,
-                        existBankAccount: bankAccount,
-                      )));
-          break;
-
-        case 2:
-          setState(() {
-            _showBankAccountDeleteAlertDialog(bankAccount);
-          });
-          break;
-      }
-    });
-  }
-
-  _showBankAccountDeleteAlertDialog(BankAccount bankAccount) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(builder: (context, StateSetter setState) {
-            return AlertDialog(
-              title: Text(
-                "Delete Bank Account !",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Palette.orangeShade.shade900),
-              ),
-              content: const Text(
-                  "Are you sure that you want to delete this bank account ?"),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('No'),
-                ),
-                TextButton(
-                  onPressed: () async {
-                    await DatabaseHelper.instance
-                        .bankAccountDelete(bankAccount.accountID!);
-                    setState(() {});
-                    getListBankAccountInfo();
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Yes'),
-                ),
-              ],
-            );
-          });
-        });
-  }
 }

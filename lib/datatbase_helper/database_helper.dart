@@ -148,7 +148,7 @@ class DatabaseHelper {
 
   Future<int> userDetailsUpdate(AppUser appUser) async {
     final db = await instance.database;
-    return db.update(
+    return await db.update(
       tableUsers,
       appUser.toJson(),
       where: '$userID = ?',
@@ -158,7 +158,7 @@ class DatabaseHelper {
 
   Future<int> bankAccountDetailsUpdate(BankAccount bankAccount) async {
     final db = await instance.database;
-    return db.update(
+    return await db.update(
       tableAccounts,
       bankAccount.toJson(),
       where: '$accountID = ?',

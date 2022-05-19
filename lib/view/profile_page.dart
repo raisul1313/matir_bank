@@ -5,7 +5,7 @@ import 'package:matir_bank/datatbase_helper/database_helper.dart';
 import 'package:matir_bank/model/app_user.dart';
 import 'package:matir_bank/utils/values/palette.dart';
 import 'package:matir_bank/view/log_in_page.dart';
-import 'package:matir_bank/view/registration_update_page.dart';
+import 'package:matir_bank/view/registration_profile_update_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -204,7 +204,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         onButtonPressed: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => RegistrationUpdatePage(
+                            builder: (_) => RegistrationProfileUpdatePage(
                               isUpdate: true,
                               existingUser: _appUser,
                             ),

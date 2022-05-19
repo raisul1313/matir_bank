@@ -10,7 +10,7 @@ import 'package:matir_bank/model/app_user.dart';
 import 'package:matir_bank/utils/page_utils.dart';
 import 'package:matir_bank/utils/values/palette.dart';
 import 'package:matir_bank/view/landing_page.dart';
-import 'package:matir_bank/view/registration_update_page.dart';
+import 'package:matir_bank/view/registration_profile_update_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LogInPage extends StatefulWidget {
@@ -43,7 +43,7 @@ class _LogInPageState extends State<LogInPage> {
   @override
   Widget build(BuildContext context) {
     _pageHeight = MediaQuery.of(context).size.height;
-    _pageWidth = PageUtils.getPageWidth(context);
+    _pageWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -167,7 +167,7 @@ class _LogInPageState extends State<LogInPage> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        RegistrationUpdatePage(
+                                        RegistrationProfileUpdatePage(
                                       isUpdate: false,
                                     ),
                                   ),

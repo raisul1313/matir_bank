@@ -2,20 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:matir_bank/model/bank_account.dart';
 import 'package:matir_bank/utils/values/palette.dart';
 
-class ItemAccount extends StatelessWidget {
+class ItemAccount extends StatefulWidget {
   final BankAccount bankAccount;
   final Function itemClick;
-  final Function itemLongClick;
-  final bool isVisible;
+  final bool isEnabled;
+  final Function itemDelete;
+  final Function itemEdit;
 
-  const ItemAccount(
-      {Key? key,
-      required this.bankAccount,
-      required this.itemClick,
-      required this.itemLongClick,
-      required this.isVisible})
+  const ItemAccount({Key? key,
+    required this.bankAccount,
+    required this.itemClick,
+    required this.isEnabled,
+    required this.itemDelete,
+    required this.itemEdit})
       : super(key: key);
 
+  @override
+  State<ItemAccount> createState() => _ItemAccountState();
+}
+
+class _ItemAccountState extends State<ItemAccount> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -26,12 +32,11 @@ class ItemAccount extends StatelessWidget {
           child: Column(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    flex: 12,
+                    flex: 2,
                     child: Text(
-                      bankAccount.bankName.toString().toUpperCase(),
+                      widget.bankAccount.bankName.toString().toUpperCase(),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: TextStyle(
@@ -41,27 +46,42 @@ class ItemAccount extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    flex: 2,
-                    child: Container(
-                      height: 25.0,
-                      width: 25.0,
-                      child: PopupMenuButton(
-                          icon: Visibility(
-                            visible: isVisible,
-                            child: Icon(Icons.more_horiz),
-                          ),
-                          itemBuilder: (context) => [
+                      flex: 1,
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: Container(
+                          height: 25.0,
+                          width: 25.0,
+                          child: PopupMenuButton(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.deepOrangeAccent,
+                                  ),
+                                ),
+                                child: Icon(
+                                  Icons.more_horiz_rounded,
+                                  color: Colors.deepOrangeAccent,
+                                ),
+                              ),
+                              itemBuilder: (context) =>
+                              [
                                 PopupMenuItem(
-                                  child: Text("First"),
+                                  child: Text("Edit"),
                                   value: 1,
+                                  onTap: () =>
+                                      widget.itemEdit(widget.bankAccount),
                                 ),
                                 PopupMenuItem(
-                                  child: Text("Second"),
+                                  child: Text("Delete"),
                                   value: 2,
+                                  onTap: () =>
+                                      widget.itemDelete(widget.bankAccount),
                                 )
                               ]),
-                    ),
-                  )
+                        ),
+                      ))
                 ],
               ),
               Divider(
@@ -81,7 +101,7 @@ class ItemAccount extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               )),
                           Text(
-                            bankAccount.type.toString(),
+                            widget.bankAccount.type.toString(),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Palette.orangeShade),
@@ -94,7 +114,7 @@ class ItemAccount extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               )),
                           Text(
-                            bankAccount.accountNumber.toString(),
+                            widget.bankAccount.accountNumber.toString(),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Palette.orangeShade),
@@ -119,13 +139,13 @@ class ItemAccount extends StatelessWidget {
                             height: 15.0,
                           ),
                           Text(
-                            "৳ " + bankAccount.amount.toString(),
+                            "৳ " + widget.bankAccount.amount.toString(),
                             style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20.0,
-                                color: Colors.green.shade700),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0,
+                              color: widget.bankAccount.amount! <= 0 ? Colors.red : Colors.green,
+                            ),
                           ),
-                          //bankAccount.amount!,
                         ],
                       ),
                     ),
@@ -136,8 +156,7 @@ class ItemAccount extends StatelessWidget {
           ),
         ),
       ),
-      onTap: () => itemClick(bankAccount),
-      onLongPress: () => itemLongClick(bankAccount),
+      onTap: () => widget.itemClick(widget.bankAccount),
     );
   }
 }

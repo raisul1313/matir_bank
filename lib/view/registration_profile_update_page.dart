@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:matir_bank/custom_ui/custom_button.dart';
 import 'package:matir_bank/custom_ui/custom_text_form_field.dart';
@@ -12,18 +13,18 @@ import 'package:matir_bank/view/landing_page.dart';
 import 'package:matir_bank/view/log_in_page.dart';
 
 
-class RegistrationUpdatePage extends StatefulWidget {
+class RegistrationProfileUpdatePage extends StatefulWidget {
   final AppUser? existingUser;
   final bool isUpdate;
 
-  const RegistrationUpdatePage({Key? key, this.existingUser, required this.isUpdate})
+  const RegistrationProfileUpdatePage({Key? key, this.existingUser, required this.isUpdate})
       : super(key: key);
 
   @override
-  State<RegistrationUpdatePage> createState() => _RegistrationUpdatePageState();
+  State<RegistrationProfileUpdatePage> createState() => _RegistrationProfileUpdatePageState();
 }
 
-class _RegistrationUpdatePageState extends State<RegistrationUpdatePage> {
+class _RegistrationProfileUpdatePageState extends State<RegistrationProfileUpdatePage> {
   final _registrationFormKey = GlobalKey<FormState>();
   bool _autoValidate = false;
   late double _pageHeight;
@@ -65,7 +66,11 @@ class _RegistrationUpdatePageState extends State<RegistrationUpdatePage> {
     _pageWidth = PageUtils.getPageWidth(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Registration'),
+        title: Text(
+          'Registration',
+          style: GoogleFonts.handlee(
+              fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20.0),
+        ),
         centerTitle: true,
       ),
       body: SafeArea(

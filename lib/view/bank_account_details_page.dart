@@ -170,7 +170,8 @@ class _BankAccountDetailsState extends State<BankAccountDetails> {
                   buttonHeight: 50,
                   backgroundColor: Palette.orangeShade.shade700,
                   onButtonPressed: _showAddWithdrawAmountDialog,
-                )
+                ),
+
               ],
             ),
           ),

@@ -50,11 +50,14 @@ class _SettingsPageState extends State<SettingsPage> {
                         child: const Text('No'),
                       ),
                       TextButton(
-                        onPressed: () => Navigator.of(context)
-                            .pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                    builder: (context) => LogInPage()),
-                                (Route<dynamic> route) => false),
+                        onPressed: () {
+
+                          Navigator.of(context)
+                              .pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => LogInPage()),
+                                  (Route<dynamic> route) => false);
+                        },
                         child: const Text('Yes'),
                       ),
                     ],
