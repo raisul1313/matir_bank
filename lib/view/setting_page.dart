@@ -51,7 +51,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                       TextButton(
                         onPressed: () {
-
+                         // TO DO Shared preference need to clear
                           Navigator.of(context)
                               .pushAndRemoveUntil(
                               MaterialPageRoute(
