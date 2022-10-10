@@ -28,6 +28,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   int? tapped;
   final bool _isShow = false;
+  bool isLoading = false;
 
   @override
   void initState() {

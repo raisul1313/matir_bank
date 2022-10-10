@@ -387,26 +387,26 @@ class _RegistrationProfileUpdatePageState extends State<RegistrationProfileUpdat
   }
 
   _handleRadioValue(value) {
-    switch (value) {
-      case 1:
-        setState(() {
-          _radioGroupValue = value;
-          _selectedGender = "Male";
-        });
+      switch (value) {
+        case 1:
+          setState(() {
+            _radioGroupValue = value;
+            _selectedGender = "Male";
+          });
 
-        break;
-      case 2:
-        setState(() {
-          _radioGroupValue = value;
-          _selectedGender = "Female";
-        });
-        break;
-      case 3:
-        setState(() {
-          _radioGroupValue = value;
-          _selectedGender = "Other";
-        });
-        break;
-    }
+          break;
+        case 2:
+          setState(() {
+            _radioGroupValue = value;
+            _selectedGender = "Female";
+          });
+          break;
+        case 3:
+          setState(() {
+            _radioGroupValue = value;
+            _selectedGender = "Other";
+          });
+          break;
+      }
   }
 }
